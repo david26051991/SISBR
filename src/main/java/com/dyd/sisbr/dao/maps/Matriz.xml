@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.MatrizDAO">  	
+	
+	<resultMap id="matriz" type="com.dyd.sisbr.model.Matriz">
+		<result property="idDocumento" 				column="idDocumento"/>
+		<result property="idPalabraClave" 			column="idPalabraClave"/>
+		<result property="token.idPalabraClave" 	column="idPalabraClave"/>
+		<result property="token.raiz" 				column="raiz"/>
+	</resultMap>
+	  
+  	<insert id="insertMatriz">
+        INSERT INTO matriz(idDocumento, idPalabraClave, frecuencia) VALUES(#{idDocumento},#{idPalabraClave},#{frecuencia})
+    </insert> 
+     
+    <select id="selectPalabraByDocumento" parameterType="java.lang.Integer" resultMap="matriz">
+     	SELECT 
+     		m.idDocumento, 
+     		m.idPalabraClave, 
+     		p.raiz 
+     	FROM matriz m INNER JOIN 
+			palabraclave p ON m.idpalabraclave = p.idpalabraclave 
+		WHERE
+     		m.idDocumento = #{idDocumento}
+     </select>
+    
+  </mapper>
+   

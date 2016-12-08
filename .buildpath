@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path="src/main/java"/>
+	<buildpathentry kind="src" path="src/main/resources"/>
+	<buildpathentry kind="src" path="src/test/java"/>
+	<buildpathentry kind="con" path="org.eclipse.dltk.mod.launching.INTERPRETER_CONTAINER"/>
+	<buildpathentry kind="con" path="org.eclipse.vjet.eclipse.core.JSNATIVE_CONTAINER/JS Native Types"/>
+	<buildpathentry kind="con" path="org.eclipse.vjet.eclipse.core.BROWSER_CONTAINER/Browser SDK"/>
+	<buildpathentry external="true" kind="lib" path="C:/Users/JANDY-PC/.gradle/caches/modules-2/files-2.1/org.webjars/angular-ui-bootstrap/0.11.2/56751886d568bc8efa1921f17f4c4a698b02e5e2/angular-ui-bootstrap-0.11.2.jar"/>
+	<buildpathentry external="true" kind="lib" path="C:/Users/JANDY-PC/.gradle/caches/modules-2/files-2.1/org.webjars/angular-ui/0.4.0-3/f159ba5dcf5cadb1faf1956a1573b9d6ef4c7889/angular-ui-0.4.0-3.jar"/>
+	<buildpathentry external="true" kind="lib" path="C:/Users/JANDY-PC/.gradle/caches/modules-2/files-2.1/org.webjars/angularjs/1.2.29/b4bacf5428e4ed8d7b6ab2136629de2e24239957/angularjs-1.2.29.jar"/>
+	<buildpathentry external="true" kind="lib" path="C:/Users/JANDY-PC/.gradle/caches/modules-2/files-2.1/org.webjars/bootstrap/3.3.7/d6aeba80236573ed585baa657dac2b951caa8e7e/bootstrap-3.3.7.jar"/>
+	<buildpathentry external="true" kind="lib" path="C:/Users/JANDY-PC/.gradle/caches/modules-2/files-2.1/org.webjars/jquery/3.0.0/cb5f5f489e595259cee33239f0cbe8ddb5a9c0d1/jquery-3.0.0.jar"/>
+</buildpath>

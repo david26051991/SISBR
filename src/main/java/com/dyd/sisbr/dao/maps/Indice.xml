@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.IndiceDAO">  	
+  
+  	<insert id="insertIndice" useGeneratedKeys="true" keyProperty="idIndice">
+        INSERT INTO indice(idCampo, idDocumento, descripcion) 
+        VALUES(#{idCampo},#{idDocumento},#{descripcion})
+    </insert> 
+    
+    <select id="selectIndicesByIdDocumento" resultType="com.dyd.sisbr.model.Indice">
+        SELECT idCampo, idDocumento, descripcion FROM indice 
+        WHERE idDocumento IN
+        <foreach item="item" index="index" collection="list"
+            open="(" separator="," close=")">
+	        #{item}
+		</foreach>
+    </select> 
+     
+  </mapper>
+   

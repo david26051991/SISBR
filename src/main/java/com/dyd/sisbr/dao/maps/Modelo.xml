@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.ModeloDAO">  	
+  
+  	<insert id="insertModelo" useGeneratedKeys="true" keyProperty="idModelo">
+        INSERT INTO modelo(datosModelo, estructura, estado) 
+        VALUES(#{datosModelo},#{estructura},#{estado})
+    </insert> 
+     
+    <select id="selectModelo" resultType="com.dyd.sisbr.model.Modelo">
+        SELECT datosModelo, estructura FROM modelo 
+        WHERE
+        	estado = '1' 
+    </select> 
+     
+  </mapper>
+   

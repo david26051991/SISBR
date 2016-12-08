@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.PalabraClaveDAO">  	
+  
+  	<select id="selectPalabrasClavesByClase" resultType="com.dyd.sisbr.model.PalabraClave">
+		SELECT p.idPalabraClave, p.idDocumento, p.raiz, p.frecuencia, p.cantDoc
+		FROM palabraclave p 
+		INNER JOIN documento d ON p.idDocumento = d.idDocumento 
+		<where>
+			<if test="idClase != 0" > d.idClase =  #{idClase} </if>
+			<if test="anioIni != 0" > AND anio <![CDATA[>=]]>  #{anioIni} </if>
+			<if test="anioFin != 0" > AND anio <![CDATA[<=]]> #{anioFin} </if>
+		</where>
+    </select> 
+    
+    <select id="selectPalabrasClavesByRaiz" resultType="com.dyd.sisbr.model.PalabraClave">
+		SELECT DISTINCT raiz, cantDoc
+		FROM palabraclave  
+		WHERE
+			raiz IN
+		<foreach item="item" index="index" collection="list"
+            open="(" separator="," close=")">
+	        #{item}
+		</foreach>
+    </select> 
+    
+    <insert id="insertPalabraClave" useGeneratedKeys="true" keyProperty="idPalabraClave">
+        INSERT INTO palabraClave(idDocumento, raiz, frecuencia, cantDoc)
+        VALUES(#{idDocumento},#{raiz},#{frecuencia},#{cantDoc})
+    </insert> 
+     
+    
+  </mapper>
+   

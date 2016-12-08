@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.CampoDAO">  	
+  
+  	<select id="selectAllCampos" resultType="com.dyd.sisbr.model.Campo">
+        SELECT idCampo, nombre, tipo, formato FROM campo
+    </select> 
+    
+    <select id="selectCampos" parameterType="com.dyd.sisbr.model.Campo" resultType="com.dyd.sisbr.model.Campo">
+        SELECT idCampo, nombre, tipo, formato FROM campo WHERE idCampo = #{idCampo}
+    </select>
+    
+    <select id="selectDetalleCampos" parameterType="com.dyd.sisbr.model.Campo" resultType="com.dyd.sisbr.model.Campo">
+        SELECT descripcion FROM detallecampo WHERE idCampo = #{idCampo}
+    </select>
+     
+  </mapper>
+   

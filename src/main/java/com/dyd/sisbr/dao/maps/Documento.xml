@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.DocumentoDAO">  	
+  
+  	<resultMap id="documento" type="com.dyd.sisbr.model.Documento">
+		<result property="idDocumento" 		column="idDocumento"/>
+		<result property="idClase" 			column="idClase"/>
+		<result property="titulo" 			column="titulo"/>
+		<result property="nombre" 			column="nombre"/>
+		<result property="path" 			column="path"/>
+		<result property="clase.idClase" 	column="idClase"/>
+		<result property="clase.nombre"		column="nombreclase"/>
+	</resultMap>
+	
+  	<insert id="insertDocumento" useGeneratedKeys="true" keyProperty="idDocumento">
+        INSERT INTO documento(idClase, titulo, nombre, path) VALUES(#{idClase},#{titulo},#{nombre},#{path})
+    </insert> 
+     
+	<select id="selectAllDocumento" resultMap="documento">
+		SELECT d.idDocumento, d.idClase, d.titulo, d.nombre, d.path, c.nombre as nombreclase
+		FROM documento d INNER JOIN clase c ON d.idClase = c.idClase
+	</select>
+	
+	<select id="selectDocumentos" resultMap="documento">
+		SELECT idDocumento, idClase, titulo, nombre, path
+		FROM documento 
+		<where>
+			<if test="idClase != 0" > idClase = #{idClase} </if>
+			<if test="anioIni != 0" > AND anio <![CDATA[>=]]>  #{anioIni} </if>
+			<if test="anioFin != 0" > AND anio <![CDATA[<=]]> #{anioFin} </if>
+			<if test="nombre != null" > AND UPPER(nombre) = UPPER(#{nombre}) </if>
+		</where>
+	</select>
+	
+	<select id="selectDocumentoByID" resultMap="documento">
+		SELECT idDocumento, idClase, titulo, nombre, path
+		FROM documento 
+		WHERE idDocumento = #{idDocumento}
+	</select>
+	
+	<select id="selectCantidadDocumentos" resultType="java.lang.Integer">
+		SELECT count(idDocumento) AS cantidad FROM documento
+	</select>
+    
+    <update id="updateDocumento">
+    	UPDATE documento
+    	<set>
+	      <if test="titulo != null">titulo = #{titulo},</if>
+	      <if test="nombre != null">nombre = #{nombre},</if>
+	      <if test="path != null">path = #{path},</if>
+	      <if test="idClase != null">idClase = #{idClase},</if>
+	      <if test="anio != 0">anio = #{anio}</if>
+	    </set>
+    	WHERE
+    		idDocumento = #{idDocumento}
+	</update>
+	
+  </mapper>
+   
