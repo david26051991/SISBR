@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,17 +98,54 @@ public class BuscadorServiceImpl implements BuscadorService{
 			
 			ini = System.currentTimeMillis();
 			//agregar a la lista los anotadores identificados
+			//comentario temporal
+//			for(Documento doc: listaDocumentos){
+//				for(PalabraClave token : doc.getListaToken()){
+//					if(token.getTipo() == 1){
+//						token.setFrecuencia(Utils.calcularFrecuenciaPalabra(token.getRaiz(), doc));
+//					}
+//					token.setCantDoc(Utils.calcularFrecuenciaDocumentos(listaDocumentos, token.getRaiz()));
+//				}
+//			}
+			//fin comentario temporal
+			Map<String, Integer> mapTokenUnicos = new HashMap<>();
+			for(Documento doc: listaDocumentos){
+				for(PalabraClave token : doc.getListaToken()){
+					mapTokenUnicos.put(token.getRaiz(), 0);
+				}
+			}
+			
+			for(String token : mapTokenUnicos.keySet()){
+				int cantDoc = 0;
+				for(Documento doc: listaDocumentos){
+					for(PalabraClave tokenDoc : doc.getListaToken()){
+						if(tokenDoc.getRaiz().equals(token)){
+							cantDoc++;
+							break;
+						}
+					}
+				}
+				mapTokenUnicos.put(token, cantDoc);
+			}
+			System.out.println("Cantidad de documentos: " + (System.currentTimeMillis() - ini));
+			ini = System.currentTimeMillis();
 			for(Documento doc: listaDocumentos){
 				for(PalabraClave token : doc.getListaToken()){
 					if(token.getTipo() == 1){
 						token.setFrecuencia(Utils.calcularFrecuenciaPalabra(token.getRaiz(), doc));
 					}
-					token.setCantDoc(Utils.calcularFrecuenciaDocumentos(listaDocumentos, token.getRaiz()));
+					token.setCantDoc(mapTokenUnicos.get(token.getRaiz()));
 				}
 			}
+			
+			System.out.println("frecuencia de palabras: " + (System.currentTimeMillis() - ini));
+			
+			ini = System.currentTimeMillis();
 			List<PalabraClave> listaConsulta = preprocesadorService.preprocesarConsulta(consulta);
+			System.out.println("preprocesar consulta: " + (System.currentTimeMillis() - ini));
 			
 			//agregar a la lista los anotadores identificados
+			ini = System.currentTimeMillis();
 			List<Indice> indicesConsulta = indiceService.identificarAtributos(consulta);
 			for(Indice indice: indicesConsulta){
 //				String[] palabrasIndice = indice.getDescripcion().split(" ");
@@ -123,18 +161,20 @@ public class BuscadorServiceImpl implements BuscadorService{
 				listaConsulta.add(token);
 			}
 			
+			System.out.println("identificar atributos de consulta: " + (System.currentTimeMillis() - ini));
+			
 			Utils.calcularFrecuenciaPalabras(new Documento(listaConsulta));
 			
 			for(PalabraClave tokenQ: listaConsulta){
 				tokenQ.setCantDoc(Utils.calcularFrecuenciaDocumentos(listaDocumentos, tokenQ.getRaiz()));
 			}			
-			
+			ini = System.currentTimeMillis();
 			for(Documento doc: listaDocumentos){
 				double gradoSim = similitudConsultaDocumento(listaConsulta, doc, listaDocumentos.size());
 				doc.setGradoSimilitud(gradoSim);
 			}
+			System.out.println("similitud consulta y documentos: " + (System.currentTimeMillis() - ini));
 			
-			ini = System.currentTimeMillis();
 			listaDocumentos = eliminarSimilitudCero(listaDocumentos);
 			
 			return ordenarDocumentosSegunGradoSim(listaDocumentos);

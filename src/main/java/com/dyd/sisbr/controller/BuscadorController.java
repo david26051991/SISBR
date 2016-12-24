@@ -71,27 +71,19 @@ public class BuscadorController {
 			@RequestParam("anioIni") String anioIni,
 			@RequestParam("anioFin") String anioFin){
 		
+		long ini = System.currentTimeMillis();
 		List<Documento> lista = buscadorService.buscarDocumentos(
 				strConsulta.toLowerCase(), Integer.parseInt(codClase), Integer.parseInt(anioIni), Integer.parseInt(anioFin));
+		System.out.println("Tiempo total de busqueda: " + (System.currentTimeMillis() - ini));
 		
 		List<Integer> listaDocID = new ArrayList<>();
 		if(lista != null){
-
-			
 			if(!strConsulta.isEmpty()){
 				List<PalabraClave> listaTokenConsulta = preprocesadorService.preprocesarConsulta(strConsulta);
 				
 				//agregar a la lista los anotadores identificados
 				List<Indice> indicesConsulta = indiceService.identificarAtributos(strConsulta);
 				for(Indice indice: indicesConsulta){
-//					String[] palabrasIndice = indice.getDescripcion().split(" ");
-//					for(String palabra: palabrasIndice){
-//						if(!palabra.equals("de") && !palabra.equals("del")){
-//							PalabraClave token = new PalabraClave();
-//							token.setRaiz(palabra);
-//							listaTokenConsulta.add(token);	
-//						}
-//					}
 					PalabraClave token = new PalabraClave();
 					token.setRaiz(indice.getDescripcion());
 					listaTokenConsulta.add(token);
@@ -110,7 +102,6 @@ public class BuscadorController {
 							if(linea.indexOf(tokenCon.getRaiz()) != -1){
 								existe  = true;
 								linea = linea.replaceAll(tokenCon.getRaiz(), "<b>"+tokenCon.getRaiz()+"</b>");
-//								linea = getBlobToken(linea, tokenCon.getRaiz());
 							}
 						}
 						if(existe)
@@ -131,7 +122,6 @@ public class BuscadorController {
 					listaDocID.add(documento.getIdDocumento());
 				}
 			}
-			
 		}
 		request.getSession().setAttribute("listaDocID", listaDocID);
 		return lista;

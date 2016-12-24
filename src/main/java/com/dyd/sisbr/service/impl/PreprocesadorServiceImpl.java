@@ -7,16 +7,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dyd.sisbr.dao.StopwordDAO;
 import com.dyd.sisbr.model.PalabraClave;
+import com.dyd.sisbr.model.Stopword;
 import com.dyd.sisbr.service.PreprocesadorService;
+import com.dyd.sisbr.util.Constantes;
 import com.dyd.sisbr.util.Utils;
 
 
 @Service
 public class PreprocesadorServiceImpl implements PreprocesadorService{
 
+	@Autowired
+	private StopwordDAO stopwordDAO;
+	
 	private HashSet<String> listaUnica;
 	
 //	public void cargarListaStopWords(File archivo1, File archivo2){
@@ -142,19 +149,20 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 	
 	@Override
 	public String borrarStopWords(String texto) {
-//		String[] listaStopWords = Utils.extraerPalabrasJSON(this.getClass().getClassLoader().getResourceAsStream("stopword.json"));
-		String[] listaStopWords = Utils.extraerPalabrasJSON(new File(getClass().getClassLoader().getResource("stopword.json").getFile()));
-		for(String palabra: listaStopWords){
-			texto = texto.replaceAll(" "+palabra+" ", " ");				
+		List<Stopword> listaStopWords = stopwordDAO.selectStopword(Constantes.TIPO_STOPWORD_SIMPLE);
+//		String[] listaStopWords = Utils.extraerPalabrasJSON(new File(getClass().getClassLoader().getResource("stopword.json").getFile()));
+		for(Stopword palabra: listaStopWords){
+			texto = texto.replaceAll(" " + palabra.getNombre() + " ", " ");				
 		}		
 		return texto;
 	}
 	
 	@Override
 	public String borrarStopWords_compuestos(String texto) {
-		String[] listaStopWordsComp = Utils.extraerPalabrasJSON(new File(getClass().getClassLoader().getResource("stopword2.json").getFile()));
-		for(String palabra_compuesta: listaStopWordsComp){
-			texto = texto.replaceAll(palabra_compuesta, "");
+		List<Stopword> listaStopWords = stopwordDAO.selectStopword(Constantes.TIPO_STOPWORD_COMPLEJO);
+//		String[] listaStopWordsComp = Utils.extraerPalabrasJSON(new File(getClass().getClassLoader().getResource("stopword2.json").getFile()));
+		for(Stopword palabra: listaStopWords){
+			texto = texto.replaceAll(" " + palabra.getNombre() + " ", " ");	
 		}		
 		return texto;
 	}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.StopwordDAO">  	
+     
+    <select id="selectStopword" resultType="com.dyd.sisbr.model.Stopword">
+        SELECT idstopword, nombre, tipo FROM stopword 
+        WHERE tipo = #{tipo}
+    </select> 
+     
+  </mapper>
+   

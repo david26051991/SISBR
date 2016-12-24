@@ -166,7 +166,7 @@ public class Utils {
 		return lista;
 	}
 	
-	public static String[] extraerPalabrasJSON(File file){
+	public static String[] extraerPalabrasJSONss(File file){
 		String[] lista = {};
 		try{
 			lista = mapper.readValue(file, String[].class);
