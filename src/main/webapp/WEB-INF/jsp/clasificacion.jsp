@@ -4,7 +4,7 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<form id="formClasif" class="form-horizontal" action="clasificarDocumentos?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" >
+			<form id="formClasif" class="form-horizontal" action="clasificador/clasificarDocumentos?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data" >
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				<div class="form-group">
 					<div class="col-sm-12">

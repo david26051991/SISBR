@@ -117,7 +117,7 @@
 			 var numAnioFin = $.trim($("#txtAnioFin").val()) != "" ? $.trim($("#txtAnioFin").val()) : "0";
 			$.ajax({
 				method: "POST",
-				url: "buscar",
+				url: "buscador/buscar",
 				data: {
 					"${_csrf.parameterName}": "${_csrf.token}",
 					strConsulta: $.trim($("#txtConsulta").val()),
@@ -137,7 +137,7 @@
 	});
 	
 	function exportar(){
-		window.location.href = 'exportar'; 
+		window.location.href = 'buscador/exportar'; 
 	}
 	
 	function pintarListaDocumentos(lista){
@@ -182,6 +182,6 @@
 	}
 	
 	function abrirArchivo(path){
-		window.open("verPDF/"+path);
+		window.open("buscador/verPDF/"+path);
 	}
 </script>

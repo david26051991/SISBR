@@ -62,12 +62,20 @@
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
+                <ul class="nav navbar-nav side-nav" id="ulOpciones">
                     <li class="menu active">
               	          <a class="opcion" href="#" data-url="iniciarConsulta"><i class="fa fa-fw fa-search"></i> B&uacute;squeda</a>
                     </li>
                     <li class="menu">
                         <a class="opcion" href="#" data-url="iniciarClasificacion"><i class="fa fa-fw fa-edit"></i> Registro</a>
+                    </li>
+                    <li class="menu">
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-wrench"></i> Mantenimiento <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demo" class="collapse">
+                            <li>
+                                <a class="opcion" href="#" data-url="iniciarMantResolucion">Resoluci&oacute;n</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -107,6 +115,28 @@
 	$(document).ready(function(){
 		
 		$("#username").html("${username}");
+		var listaOpciones = $.parseJSON('${listaOpciones}');
+		var strHtml = "";
+		$.each(listaOpciones, function(i, objOpcion){
+			if(objOpcion.listaHijos != null){
+				strHtml += ' <li class="menu">'
+						+ '<li class="menu">'
+	                	+ '<a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-wrench"></i> ' + objOpcion.nombre + ' <i class="fa fa-fw fa-caret-down"></i></a>'
+	                	+ '<ul id="demo" class="collapse">';
+				$.each(objOpcion.listaHijos, function(i, objHijo){
+					strHtml += '<li>'
+	                    	+ '<a class="opcion" href="#" data-url="' + objHijo.link + '">' + objHijo.nombre + '</a>'
+	                		+ '</li>';
+				});
+	            strHtml += '</ul>'
+	            		+ '</li>';
+			} else{
+				strHtml += ' <li class="menu">'
+	    	          + '<a class="opcion" href="#" data-url="' + objOpcion.link + '"><i class="fa fa-fw fa-search"></i> '+ objOpcion.nombre + '</a>'
+	                  + '</li>';	
+			}
+		});
+		$("#ulOpciones").html(strHtml);
 		
 		$(".opcion").each(function(){
 		    var el = $(this);
