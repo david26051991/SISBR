@@ -35,6 +35,7 @@ import com.dyd.sisbr.service.PreprocesadorService;
 import com.dyd.sisbr.util.Utils;
 
 @Controller
+@RequestMapping("/buscador")
 public class BuscadorController {
 	
 	@Autowired

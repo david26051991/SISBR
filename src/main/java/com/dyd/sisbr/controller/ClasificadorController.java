@@ -18,6 +18,7 @@ import com.dyd.sisbr.util.Utils;
 
 
 @Controller
+@RequestMapping("/clasificador")
 public class ClasificadorController {
 
 	@Autowired
