@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.ModuloDAO">  	
+  
+  	<select id="selectModulosPorUsuario" resultType="com.dyd.sisbr.model.Modulo">
+        SELECT m.idModulo, m.nombre, m.link, m.idPadre, m.estado FROM modulo m 
+        INNER JOIN modulo_perfil mp on m.idModulo = mp.idModulo 
+        INNER JOIN perfil_usuario pu on mp.idPerfil = pu.idPerfil 
+        WHERE pu.username = #{usuario} and mp.estado = '01' and pu.estado = '01' and m.idPadre is null
+    </select> 
+    
+    <select id="selectModulosHijos" resultType="com.dyd.sisbr.model.Modulo">
+        SELECT idModulo, nombre, link, idPadre, estado FROM modulo
+        WHERE idPadre = #{idPadre}
+    </select> 
+     
+  </mapper>
+   
