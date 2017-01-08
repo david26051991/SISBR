@@ -92,7 +92,8 @@ public class BuscadorController {
 				
 				for(Documento documento : lista){
 					String resumen = "";
-					String texto = Utils.obtenerTextoPDF(documento.getPath());
+//					String texto = Utils.obtenerTextoPDF(documento.getPath());
+					String texto = documentoService.obtenerTextArchivo(documento.getIdArchivo());
 					StringTokenizer tokensLinea = new StringTokenizer(texto, "\n");
 					while(tokensLinea.hasMoreTokens()){
 						String linea = tokensLinea.nextToken();
@@ -116,7 +117,8 @@ public class BuscadorController {
 				}
 			} else{
 				for(Documento documento : lista){
-					String texto = Utils.obtenerTextoPDF(documento.getPath());
+//					String texto = Utils.obtenerTextoPDF(documento.getPath());
+					String texto = documentoService.obtenerTextArchivo(documento.getIdArchivo());
 					int posIni = texto.indexOf("Visto");
 					documento.setResumen(texto.substring(posIni, posIni + 100));
 					System.out.println(documento.getTitulo());

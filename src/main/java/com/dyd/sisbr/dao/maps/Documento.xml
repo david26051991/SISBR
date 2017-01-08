@@ -16,16 +16,16 @@
 	</resultMap>
 	
   	<insert id="insertDocumento" useGeneratedKeys="true" keyProperty="idDocumento">
-        INSERT INTO documento(idClase, titulo, nombre, path) VALUES(#{idClase},#{titulo},#{nombre},#{path})
+        INSERT INTO documento(idClase, titulo, nombre, path, idArchivo) VALUES(#{idClase},#{titulo},#{nombre},#{path}, #{idArchivo})
     </insert> 
      
 	<select id="selectAllDocumento" resultMap="documento">
-		SELECT d.idDocumento, d.idClase, d.titulo, d.nombre, d.path, c.nombre as nombreclase
+		SELECT d.idDocumento, d.idClase, d.titulo, d.nombre, d.path, c.nombre as nombreclase, d.idArchivo
 		FROM documento d INNER JOIN clase c ON d.idClase = c.idClase
 	</select>
 	
 	<select id="selectDocumentos" resultMap="documento">
-		SELECT idDocumento, idClase, titulo, nombre, path
+		SELECT idDocumento, idClase, titulo, nombre, path, idArchivo
 		FROM documento 
 		<where>
 			<if test="idClase != 0" > idClase = #{idClase} </if>

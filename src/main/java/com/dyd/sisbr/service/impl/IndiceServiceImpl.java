@@ -13,6 +13,7 @@ import com.dyd.sisbr.dao.IndiceDAO;
 import com.dyd.sisbr.model.Campo;
 import com.dyd.sisbr.model.Documento;
 import com.dyd.sisbr.model.Indice;
+import com.dyd.sisbr.service.DocumentoService;
 import com.dyd.sisbr.service.IndiceService;
 import com.dyd.sisbr.util.Utils;
 
@@ -27,6 +28,9 @@ public class IndiceServiceImpl implements IndiceService {
 	@Autowired
 	private IndiceDAO indiceDAO;
 	
+	@Autowired
+	private DocumentoService documentoService;
+	
 	@Override
 	public void guardarListaIndices(List<Indice> listaIndices){
 		if(listaIndices != null){
@@ -40,7 +44,8 @@ public class IndiceServiceImpl implements IndiceService {
 	public List<Indice> identificarAtributos(Documento documento) {	
 		String titulo = "";
 		int anio = 0;
-		String fulltexto = Utils.obtenerTextoPDF(documento.getPath());
+//		String fulltexto = Utils.obtenerTextoPDF(documento.getPath());
+		String fulltexto = documentoService.obtenerTextArchivo(documento.getIdArchivo());
 		fulltexto = Utils.quitarEspacios(fulltexto);
 		fulltexto = Utils.quitarTildes(fulltexto);
 		fulltexto  = fulltexto.toLowerCase();

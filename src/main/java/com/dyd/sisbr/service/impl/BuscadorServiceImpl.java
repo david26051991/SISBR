@@ -207,6 +207,7 @@ public class BuscadorServiceImpl implements BuscadorService{
 			doc2.setTitulo(listaDocumentos.get(i).getTitulo());
 			doc2.setNombre(listaDocumentos.get(i).getNombre());
 			doc2.setGradoSimilitud(listaDocumentos.get(i).getGradoSimilitud());
+			doc2.setIdArchivo(listaDocumentos.get(i).getIdArchivo());
 			listaOrdenada[i] = doc2;
 		}
 		if(listaOrdenada.length > 0){

@@ -1,20 +1,20 @@
 package com.dyd.sisbr.swing;
 
 import java.io.File;
-import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.dyd.sisbr.dao.ClaseDAO;
+import com.dyd.sisbr.model.Archivo;
 import com.dyd.sisbr.model.Clase;
 import com.dyd.sisbr.model.Documento;
 import com.dyd.sisbr.model.Indice;
@@ -56,13 +56,29 @@ public class Main extends Thread {
 	@Override
 	public void run() {
 
+//		long ini = System.currentTimeMillis();
+//		String texto = Utils.obtenerTextoPDF("D:/REPOSITORIO_RESOLUCIONES/03952-15t.pdf");
+//		long fin = System.currentTimeMillis();
+//		System.out.println("lectura de archivo en ruta PDF: " + (fin - ini));
+//		
+//		ini = System.currentTimeMillis();
+//		Archivo arch = documentoService.obtenerArchivo(26);
+//		fin = System.currentTimeMillis();
+//		System.out.println("lectura de archivo en BD : " + (fin - ini));
+//		
+//		
+//		ini = System.currentTimeMillis();
+//		String arch2 = documentoService.obtenerTextArchivo(26);
+//		fin = System.currentTimeMillis();
+//		System.out.println("lectura del texto en BD: " + (fin - ini));
+		
 		try {
 			double progreso = 0;
-			Properties prop = new Properties();
-			InputStream input = this.getClass().getClassLoader().getResourceAsStream("config.properties");
-			prop.load(input);
+//			Properties prop = new Properties();
+//			InputStream input = this.getClass().getClassLoader().getResourceAsStream("config.properties");
+//			prop.load(input);
 
-			String path = prop.getProperty("ruta_entrenar");
+			String path = this.frame.getTxtRutaResEjemplo().getText();//prop.getProperty("ruta_entrenar");
 			// preprocesadorService.cargarListaStopWords(new
 			// File(prop.getProperty("ruta_stopword1")), new
 			// File(prop.getProperty("ruta_stopword2")));
@@ -76,7 +92,7 @@ public class Main extends Thread {
 			List<Documento> listaDocumentos = new ArrayList<>();
 			double progresoxClase = 20 / listaClases.size();
 			for (Clase clase : listaClases) {
-				File carpeta = new File(path + clase.getNombre());
+				File carpeta = new File(path + "/" + clase.getNombre());
 				File[] listaArchivos = carpeta.listFiles();
 				if (listaArchivos == null)
 					continue;
@@ -86,12 +102,26 @@ public class Main extends Thread {
 					List<PalabraClave> listaToken = preprocesadorService.preprocesamiento(file);
 					if (listaToken != null) {
 						// guardar documento
-						File file_repo = Utils.guardarArchivoPDF((String) prop.get("ruta_guardar"), file);
+//						File file_repo = Utils.guardarArchivoPDF((String) prop.get("ruta_guardar"), file);
+//						Documento doc = new Documento();
+//						doc.setIdClase(clase.getIdClase());
+//						doc.setClase(clase);
+//						doc.setNombre(file_repo.getName());
+//						doc.setPath(file_repo.getPath());
+//						doc.setListaToken(listaToken);
+//						listaDocumentos.add(doc);
+						
+						Archivo archivo = new Archivo();
+						archivo.setDatos(Files.readAllBytes(file.toPath()));
+						archivo.setNombre(file.getName());
+						archivo.setTexto(Utils.obtenerTextoPDF(file.getAbsolutePath()));
+						documentoService.guardarArchivo(archivo);
+						
 						Documento doc = new Documento();
 						doc.setIdClase(clase.getIdClase());
 						doc.setClase(clase);
-						doc.setNombre(file_repo.getName());
-						doc.setPath(file_repo.getPath());
+						doc.setNombre(file.getName());
+						doc.setIdArchivo(archivo.getIdArchivo());
 						doc.setListaToken(listaToken);
 						listaDocumentos.add(doc);
 					}
@@ -112,8 +142,7 @@ public class Main extends Thread {
 
 			// *************FIN PRUEBA
 
-			clasificadorService.construirClasificador(listaClases,
-					listaDocumentos, listaUnica);
+			clasificadorService.construirClasificador(listaClases, listaDocumentos, listaUnica);
 			progreso = 30;
 			setProgreso(progreso);
 
@@ -131,10 +160,6 @@ public class Main extends Thread {
 						+ documento.getNombre() + ", cantidad: "
 						+ documento.getListaToken().size());
 				palabraClaveService.guardarPalabrasClave(documento.getListaToken());
-				if(documento.getNombre().equals("00090-16t.pdf")){
-					int x = 0;
-					System.out.println(x);
-				}
 				List<Indice> listaIndice = indiceService.identificarAtributos(documento);
 
 				if (!listaIndice.isEmpty()) {

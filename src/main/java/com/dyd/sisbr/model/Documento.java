@@ -12,6 +12,7 @@ public class Documento implements Serializable{
 	private String nombre;
 	private String path;
 	private String titulo;
+	private int idArchivo;
 	private int anio;
 	private String resumen;
 	private double gradoSimilitud;
@@ -122,6 +123,14 @@ public class Documento implements Serializable{
 
 	public void setAnioFin(int anioFin) {
 		this.anioFin = anioFin;
+	}
+
+	public int getIdArchivo() {
+		return idArchivo;
+	}
+
+	public void setIdArchivo(int idArchivo) {
+		this.idArchivo = idArchivo;
 	}
 
 }

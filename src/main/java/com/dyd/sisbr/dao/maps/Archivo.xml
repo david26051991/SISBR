@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.dyd.sisbr.dao.ArchivoDAO">  	
+  
+  	<insert id="insertArchivo" useGeneratedKeys="true" keyProperty="idArchivo">
+        INSERT INTO archivo(datos, nombre, texto) 
+        VALUES(#{datos},#{nombre},#{texto})
+    </insert> 
+     
+    <select id="selectArchivo" resultType="com.dyd.sisbr.model.Archivo">
+        SELECT idArchivo, datos, nombre FROM archivo 
+        WHERE idArchivo = #{idArchivo}
+    </select> 
+    
+     <select id="selectTextoArchivo" resultType="com.dyd.sisbr.model.Archivo">
+        SELECT idArchivo, nombre, texto FROM archivo 
+        WHERE idArchivo = #{idArchivo}
+    </select> 
+     
+  </mapper>
+   

@@ -7,7 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dyd.sisbr.dao.ArchivoDAO;
 import com.dyd.sisbr.dao.DocumentoDAO;
+import com.dyd.sisbr.model.Archivo;
 import com.dyd.sisbr.model.Documento;
 import com.dyd.sisbr.service.DocumentoService;
 
@@ -16,6 +18,9 @@ public class DocumentoServiceImpl implements DocumentoService{
 
 	@Autowired
 	private DocumentoDAO documentoDAO;
+	
+	@Autowired
+	private ArchivoDAO archivoDAO;
 	
 	@Override
 	public void guardarDocumentos(List<Documento> listaDocumentos) {
@@ -77,4 +82,22 @@ public class DocumentoServiceImpl implements DocumentoService{
 		}
 		return listaFile;
 	}
+
+	@Override
+	public void guardarArchivo(Archivo archivo) {
+		archivoDAO.insertArchivo(archivo);
+	}
+
+	@Override
+	public Archivo obtenerArchivo(int idArchivo) {
+		return archivoDAO.selectArchivo(idArchivo);
+	}
+	
+	@Override
+	public String obtenerTextArchivo(int idArchivo) {
+		Archivo archivo = archivoDAO.selectTextoArchivo(idArchivo);
+		return archivo != null ? archivo.getTexto() : null;
+	}
+	
+	
 }
