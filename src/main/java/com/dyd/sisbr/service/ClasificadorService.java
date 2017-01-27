@@ -9,12 +9,8 @@ import com.dyd.sisbr.model.PalabraClave;
 
 public interface ClasificadorService {
 
-	public Documento clasificarDocumento(File file);
-	
-	public Documento clasificarDocumento2(File file);
+	public Documento clasificarDocumento(File file) throws Exception;
 	
 	public void construirClasificador(List<Clase> listaClases, List<Documento> listaDocumentos,  List<PalabraClave> listaUnicasPalabras);
-	
-	public void construirClasificador2(List<Clase> listaClases, List<Documento> listaDocumentos);
 	
 }

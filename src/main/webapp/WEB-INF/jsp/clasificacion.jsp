@@ -1,6 +1,6 @@
 <div class="container-fluid" >
 	<div  align="left">
-		<h3>Clasificador de nuevos documentos</h3>
+		<h3>Clasificador de nuevas resoluciones</h3>
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-body">
@@ -13,7 +13,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-10">
-						<input type="file" id = "resoluciones" name = "file" data-buttonName="btn-success" data-buttonText="Seleccionar Archivos" accept=".pdf" multiple="multiple">
+						<input type="file" id = "resoluciones" name = "file" data-buttonText="Seleccionar Archivos" accept=".pdf" multiple="multiple">
 					</div>
 				</div>
 				<div class="form-group">
@@ -38,6 +38,30 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+
+<div class="modal fade" id="idModalMensaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">
+            <span id="idTituloDialog"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+         <table id="idModelTbl">
+              <tr><td style="width: 60px;"></td>
+               <td></td>
+               </tr>
+         </table>
+      </div>
+      <div class="modal-footer">
+           <div id="idButtonFooter"></div>
+        </div>
+    </div>
+  </div>
 </div>
 
 <script src="/sisbr/js/script.js"></script>
@@ -65,8 +89,6 @@
 		});
 		
 		$("#btnClasificar").click(function(){
-// 			startAjax();
-// 			$("#formClasif").submit();
 			startAjax();
 			$("#btnClasificar").prop("disabled", true);
 			var bar = $('.progress-bar');
@@ -79,30 +101,35 @@
 			var listaDocumentos = [];
 			
 			for(var i = 0; i < cantFiles; i++){
-// 				var formElement = document.getElementById("formClasif");
-// 				var form = new FormData(formElement);
 				var form = new FormData();
 				form.append('file', $('#resoluciones').prop('files')[i]);
 				form.append('${_csrf.parameterName}', '${_csrf.token}');
 				 $.ajax({
-					    url: 'clasificarDocumentos?${_csrf.parameterName}=${_csrf.token}',
-// 					    data: {"numero" : "1", '${_csrf.parameterName}': '${_csrf.token}'},
+					    url: 'clasificador/clasificarDocumentos?${_csrf.parameterName}=${_csrf.token}',
 						data: form,
 					    dataType: 'text',
 					    method: 'POST',
 					    processData: false,
 					    contentType: false,
 					    async: true,
-					    success: function(response){
-					    	listaDocumentos.push($.parseJSON(response));
-					      	porcentaje += aumento;
-					      	bar.width( porcentaje + '%');
-					      	if(listaDocumentos.length == (cantFiles)){
-					      		$("#barraProgreso").hide();
+					    success: function(respuesta){
+					    	respuesta = $.parseJSON(respuesta);
+					    	porcentaje += aumento;
+					    	bar.width( porcentaje + '%');
+					    	if(respuesta.exito){
+					    		listaDocumentos.push(respuesta.data);
+					    	} else{
+					    		var doc = {"nombre": respuesta.data.nombre};
+					    		var clase = {"nombre": respuesta.mensaje};
+					    		doc["clase"] = clase;
+					    		listaDocumentos.push(doc);
+					    	}
+					    	if(listaDocumentos.length == (cantFiles)){
+					    		$("#barraProgreso").hide();
 					      		pintarResultados(listaDocumentos);
 					      		$("#btnClasificar").prop("disabled", false);
 					      		endAjax();
-					      	}
+					    	}
 					    }
 					  });
 			}

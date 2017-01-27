@@ -10,14 +10,16 @@ public class Documento implements Serializable{
 	private int idDocumento;
 	private int idClase;
 	private String nombre;
-	private String path;
 	private String titulo;
 	private int idArchivo;
 	private int anio;
+	private int mes;
 	private String resumen;
 	private double gradoSimilitud;
 	private int anioIni;
 	private int anioFin;
+	private int mesIni;
+	private int mesFin;
 	
 	private Clase clase;
 	
@@ -51,14 +53,6 @@ public class Documento implements Serializable{
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
 	}
 
 	public Clase getClase() {
@@ -131,6 +125,30 @@ public class Documento implements Serializable{
 
 	public void setIdArchivo(int idArchivo) {
 		this.idArchivo = idArchivo;
+	}
+
+	public int getMesIni() {
+		return mesIni;
+	}
+
+	public void setMesIni(int mesIni) {
+		this.mesIni = mesIni;
+	}
+
+	public int getMesFin() {
+		return mesFin;
+	}
+
+	public void setMesFin(int mesFin) {
+		this.mesFin = mesFin;
+	}
+
+	public int getMes() {
+		return mes;
+	}
+
+	public void setMes(int mes) {
+		this.mes = mes;
 	}
 
 }

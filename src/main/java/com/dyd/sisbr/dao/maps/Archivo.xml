@@ -6,17 +6,19 @@
   <mapper namespace="com.dyd.sisbr.dao.ArchivoDAO">  	
   
   	<insert id="insertArchivo" useGeneratedKeys="true" keyProperty="idArchivo">
-        INSERT INTO archivo(datos, nombre, texto) 
-        VALUES(#{datos},#{nombre},#{texto})
+<!--         INSERT INTO archivo(datos, nombre, texto)  -->
+<!--         VALUES(#{datos},#{nombre},#{texto}) -->
+        INSERT INTO archivo(nombre, texto, path) 
+        VALUES(#{nombre}, #{texto}, #{path})
     </insert> 
      
     <select id="selectArchivo" resultType="com.dyd.sisbr.model.Archivo">
-        SELECT idArchivo, datos, nombre FROM archivo 
+        SELECT idArchivo, datos, nombre, path FROM archivo 
         WHERE idArchivo = #{idArchivo}
     </select> 
     
      <select id="selectTextoArchivo" resultType="com.dyd.sisbr.model.Archivo">
-        SELECT idArchivo, nombre, texto FROM archivo 
+        SELECT idArchivo, nombre, texto, path FROM archivo 
         WHERE idArchivo = #{idArchivo}
     </select> 
      

@@ -10,24 +10,24 @@
 		<result property="idClase" 			column="idClase"/>
 		<result property="titulo" 			column="titulo"/>
 		<result property="nombre" 			column="nombre"/>
-		<result property="path" 			column="path"/>
 		<result property="clase.idClase" 	column="idClase"/>
 		<result property="clase.nombre"		column="nombreclase"/>
 	</resultMap>
 	
   	<insert id="insertDocumento" useGeneratedKeys="true" keyProperty="idDocumento">
-        INSERT INTO documento(idClase, titulo, nombre, path, idArchivo) VALUES(#{idClase},#{titulo},#{nombre},#{path}, #{idArchivo})
+        INSERT INTO documento(idClase, titulo, nombre, idArchivo) VALUES(#{idClase},#{titulo},#{nombre}, #{idArchivo})
     </insert> 
      
 	<select id="selectAllDocumento" resultMap="documento">
-		SELECT d.idDocumento, d.idClase, d.titulo, d.nombre, d.path, c.nombre as nombreclase, d.idArchivo
+		SELECT d.idDocumento, d.idClase, d.titulo, d.nombre, c.nombre as nombreclase, d.idArchivo
 		FROM documento d INNER JOIN clase c ON d.idClase = c.idClase
 	</select>
 	
 	<select id="selectDocumentos" resultMap="documento">
-		SELECT idDocumento, idClase, titulo, nombre, path, idArchivo
+		SELECT idDocumento, idClase, titulo, nombre, idArchivo
 		FROM documento 
 		<where>
+			<if test="idDocumento != 0" > idDocumento = #{idDocumento} </if>
 			<if test="idClase != 0" > idClase = #{idClase} </if>
 			<if test="anioIni != 0" > AND anio <![CDATA[>=]]>  #{anioIni} </if>
 			<if test="anioFin != 0" > AND anio <![CDATA[<=]]> #{anioFin} </if>
@@ -36,12 +36,12 @@
 	</select>
 	
 	<select id="selectDocumentoByID" resultMap="documento">
-		SELECT idDocumento, idClase, titulo, nombre, path
+		SELECT idDocumento, idClase, titulo, nombre
 		FROM documento 
 		WHERE idDocumento = #{idDocumento}
 	</select>
 	
-	<select id="selectCantidadDocumentos" resultType="java.lang.Integer">
+	<select id="selectCantidadDocumentosTotal" resultType="java.lang.Integer">
 		SELECT count(idDocumento) AS cantidad FROM documento
 	</select>
     
@@ -50,13 +50,22 @@
     	<set>
 	      <if test="titulo != null">titulo = #{titulo},</if>
 	      <if test="nombre != null">nombre = #{nombre},</if>
-	      <if test="path != null">path = #{path},</if>
 	      <if test="idClase != null">idClase = #{idClase},</if>
-	      <if test="anio != 0">anio = #{anio}</if>
+	      <if test="anio != 0">anio = #{anio},</if>
+	      <if test="mes != 0">mes = #{mes}</if>
 	    </set>
     	WHERE
     		idDocumento = #{idDocumento}
 	</update>
+	
+	<select id="selectCantidadDocumentos" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT CONCAT(anio, '-', RIGHT(CONCAT('00',mes),2)) AS fecha, count(idDocumento) AS cantidad
+		FROM documento
+		WHERE idClase = #{idClase} 
+		AND DATEFROMPARTS(anio, mes, 1) <![CDATA[>=]]> DATEFROMPARTS(#{anioIni}, #{mesIni}, 1)
+		AND DATEFROMPARTS(anio, mes, 1) <![CDATA[<=]]> DATEFROMPARTS(#{anioFin}, #{mesFin}, 1)
+		GROUP BY anio, mes
+	</select>
 	
   </mapper>
    

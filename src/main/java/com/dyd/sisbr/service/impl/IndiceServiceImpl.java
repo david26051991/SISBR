@@ -44,6 +44,7 @@ public class IndiceServiceImpl implements IndiceService {
 	public List<Indice> identificarAtributos(Documento documento) {	
 		String titulo = "";
 		int anio = 0;
+		int mes = 0;
 //		String fulltexto = Utils.obtenerTextoPDF(documento.getPath());
 		String fulltexto = documentoService.obtenerTextArchivo(documento.getIdArchivo());
 		fulltexto = Utils.quitarEspacios(fulltexto);
@@ -62,6 +63,7 @@ public class IndiceServiceImpl implements IndiceService {
 					titulo = extraerTitulo(listaIndices);
 				} else if(campo.getIdCampo() == 2 && anio == 0){
 					anio = extraerAnio(listaIndices);
+					mes = extraerMes(listaIndices);
 				}
 			}
 //			else if(campo.getTipo() == Campo.TIPO_LISTA){
@@ -81,6 +83,7 @@ public class IndiceServiceImpl implements IndiceService {
 		
 		documento.setTitulo(titulo);
 		documento.setAnio(anio);
+		documento.setMes(mes);
 		System.out.println("Identificando atributos, documento: "+titulo);
 		
 		return listaIndice;
@@ -177,6 +180,14 @@ public class IndiceServiceImpl implements IndiceService {
 			anio = Integer.parseInt((listaIndices.get(0).getDescripcion().split(" "))[4]);
 		}
 		return anio;
+	}
+	
+	private int extraerMes(List<Indice> listaIndices){
+		int mes = 0;
+		if(listaIndices!= null && listaIndices.size()>0){
+			mes = Utils.getNumeroMes((listaIndices.get(0).getDescripcion().split(" "))[2].toUpperCase());
+		}
+		return mes;
 	}
 
 	public String getTexto() {

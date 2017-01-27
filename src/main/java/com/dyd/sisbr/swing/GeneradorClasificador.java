@@ -7,21 +7,27 @@ import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SuppressWarnings("serial")
 public class GeneradorClasificador extends javax.swing.JFrame {
 
 //    ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-	ApplicationContext ctx = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-    Main main = (Main) ctx.getBean("main");
+//	ApplicationContext ctx = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+//    Main main = (Main) ctx.getBean("main");
+	
+	ConfigurableApplicationContext ctx = SpringApplication.run(ApplicationConfig.class);
+	Main main = ctx.getBean(Main.class);
+	
+    String rutaAlmacen = main.getPathRepositoryFiles();
         
     public GeneradorClasificador() {
         try {
@@ -37,12 +43,12 @@ public class GeneradorClasificador extends javax.swing.JFrame {
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+    	
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtRutaResEjemplo = new javax.swing.JTextField();
         btnSeleccionarEjemplos = new javax.swing.JButton();
-        btnSeleccionarAlmacen = new javax.swing.JButton();
+//        btnSeleccionarAlmacen = new javax.swing.JButton();
         txtRutaResAlmacen = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnGenerar = new javax.swing.JButton();
@@ -64,12 +70,12 @@ public class GeneradorClasificador extends javax.swing.JFrame {
             }
         });
 
-        btnSeleccionarAlmacen.setText("Seleccionar");
-        btnSeleccionarAlmacen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSeleccionarAlmacenActionPerformed(evt);
-            }
-        });
+//        btnSeleccionarAlmacen.setText("Seleccionar");
+//        btnSeleccionarAlmacen.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                btnSeleccionarAlmacenActionPerformed(evt);
+//            }
+//        });
 
         jLabel3.setText("Ruta de la Colección de Resoluciones:");
 
@@ -114,7 +120,8 @@ public class GeneradorClasificador extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(txtRutaResAlmacen)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSeleccionarAlmacen))
+//                                .addComponent(btnSeleccionarAlmacen))
+                                )
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(txtRutaResEjemplo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -136,7 +143,7 @@ public class GeneradorClasificador extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSeleccionarAlmacen)
+//                    .addComponent(btnSeleccionarAlmacen)
                     .addComponent(txtRutaResAlmacen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(pbarProceso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -148,6 +155,9 @@ public class GeneradorClasificador extends javax.swing.JFrame {
         );
 
         pack();
+        
+        txtRutaResAlmacen.setEnabled(false);
+        txtRutaResAlmacen.setText(rutaAlmacen);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSeleccionarEjemplosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarEjemplosActionPerformed
@@ -161,21 +171,27 @@ public class GeneradorClasificador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSeleccionarEjemplosActionPerformed
 
-    private void btnSeleccionarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarAlmacenActionPerformed
-        JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = fc.showOpenDialog(this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            txtRutaResAlmacen.setText(file.getPath());
-        }
-    }//GEN-LAST:event_btnSeleccionarAlmacenActionPerformed
+//    private void btnSeleccionarAlmacenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarAlmacenActionPerformed
+//        JFileChooser fc = new JFileChooser();
+//        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//        int returnVal = fc.showOpenDialog(this);
+//
+//        if (returnVal == JFileChooser.APPROVE_OPTION) {
+//            File file = fc.getSelectedFile();
+//            txtRutaResAlmacen.setText(file.getPath());
+//        }
+//    }
 
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
         
-        main.setFormulario(this);
-        main.start();
+    	if(txtRutaResEjemplo.getText().trim().isEmpty()){
+    		JOptionPane.showMessageDialog(this, "Debe seleccionar la ruta de la colección de resoluciones");
+    	} else if(txtRutaResAlmacen.getText().trim().isEmpty()){
+    		JOptionPane.showMessageDialog(this, "Debe seleccionar la ruta donde se almacenará las resoluciones");
+    	} else{
+    		main.setFormulario(this);
+            main.start();
+    	}
         
     }//GEN-LAST:event_btnGenerarActionPerformed
 
@@ -183,9 +199,9 @@ public class GeneradorClasificador extends javax.swing.JFrame {
         return btnGenerar;
     }
 
-    public JButton getBtnSeleccionarAlmacen() {
-        return btnSeleccionarAlmacen;
-    }
+//    public JButton getBtnSeleccionarAlmacen() {
+//        return btnSeleccionarAlmacen;
+//    }
 
     public JButton getBtnSeleccionarEjemplos() {
         return btnSeleccionarEjemplos;
@@ -220,10 +236,18 @@ public class GeneradorClasificador extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void bloquearForm(){
+    	txtRutaResAlmacen.setEnabled(false);
+    	txtRutaResEjemplo.setEnabled(false);
+    	btnGenerar.setEnabled(false);
+//    	btnSeleccionarAlmacen.setEnabled(false);
+    	btnSeleccionarEjemplos.setEnabled(false);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenerar;
-    private javax.swing.JButton btnSeleccionarAlmacen;
+//    private javax.swing.JButton btnSeleccionarAlmacen;
     private javax.swing.JButton btnSeleccionarEjemplos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

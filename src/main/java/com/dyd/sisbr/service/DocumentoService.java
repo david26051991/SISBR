@@ -2,6 +2,7 @@ package com.dyd.sisbr.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import com.dyd.sisbr.model.Archivo;
 import com.dyd.sisbr.model.Documento;
@@ -13,9 +14,11 @@ public interface DocumentoService {
 	public List<Documento> obtenerDocumentos();
 	public void actualizarDocumento(Documento documento);
 	public List<Documento> selectDocumentos(Documento documento);
+	public Documento obtenerDocumento(int idDocumento);
 	public int obtenerCantidadDocumentos();
 	public Documento obtenerDocumentoPorNombre(String nombre);
 	public List<Documento> obtenerDocumentosPorClase(int idClase, int anioIni, int anioFin);
+	public Map<String, Integer> obtenerCantidadDocumentos(int idClase, int anioIni, int anioFin,	int mesIni, int mesFin);
 	public List<File> obtenerArchivosExportar(List<Integer> listaId);
 	public void guardarArchivo(Archivo archivo);
 	public Archivo obtenerArchivo(int idArchivo);

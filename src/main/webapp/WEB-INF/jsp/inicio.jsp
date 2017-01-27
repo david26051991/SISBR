@@ -15,6 +15,7 @@
 	<!-- CSS -->
     <link href="/sisbr/webjars/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
     <link href="/sisbr/css/sb-admin.css" rel="stylesheet">
+    <link href="/sisbr/css/estilos.css" rel="stylesheet">
     <link href="/sisbr/css/morris.css" rel="stylesheet">
     <link href="/sisbr/webjars/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 	<link href="/sisbr/webjars/eonasdan-bootstrap-datetimepicker/4.17.37/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
@@ -94,19 +95,25 @@
         <!-- /#page-wrapper -->
 
     </div>
-    <div id='ajax_loader' style="position: fixed; left: 50%; top: 50%; display: none;">
-   		<img src="/sisbr/img/loader.gif" height="50px" width="50px"></img>
- </div>
     <!-- /#wrapper -->
 
 	<!-- javascript -->
 	<script src="/sisbr/webjars/jquery/1.11.2/jquery.min.js"></script>
 	<script src="/sisbr/webjars/bootstrap/3.3.7/js/bootstrap.js"></script>
-<!-- 	<script src="/sisbr/webjars/moment/2.15.1/moment.js"></script> -->
 	<script src="/sisbr/js/moment-with-locales.js"></script>
 	<script src="/sisbr/webjars/eonasdan-bootstrap-datetimepicker/4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
 	<script src="/sisbr/webjars/datatables/1.10.10/js/jquery.dataTables.min.js"></script>
 	<script src="/sisbr/js/bootstrap-filestyle.min.js"></script>
+	<script src="/sisbr/webjars/jquery.inputmask/3.1.0/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
+	<!-- Morris Charts JavaScript -->
+	<script src="/sisbr/js/morris/raphael.min.js"></script>
+	<script src="/sisbr/js/morris/morris.min.js"></script>
+	 <!-- FLOT JavaScript -->
+	 <script src="/sisbr/js/flot/jquery.flot.js"></script>
+	 <script src="/sisbr/js/flot/jquery.flot.pie.js"></script>
+	 <script src="/sisbr/js/flot/jquery.flot.resize.js"></script>
+	 <script src="/sisbr/js/flot/jquery.flot.tooltip.min.js"></script>
+	 <script src="/sisbr/js/flot/excanvas.min.js"></script>
 	<script src="/sisbr/js/script.js"></script>
 </body>
 

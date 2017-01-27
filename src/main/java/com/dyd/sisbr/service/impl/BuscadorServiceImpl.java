@@ -22,6 +22,8 @@ import com.dyd.sisbr.service.IndiceService;
 import com.dyd.sisbr.service.PalabraClaveService;
 import com.dyd.sisbr.service.PreprocesadorService;
 import com.dyd.sisbr.util.Utils;
+import com.dyd.sysbr.bean.DetalleReporteBean;
+import com.dyd.sysbr.bean.ReporteBean;
 
 @Service
 public class BuscadorServiceImpl implements BuscadorService{
@@ -111,22 +113,34 @@ public class BuscadorServiceImpl implements BuscadorService{
 			Map<String, Integer> mapTokenUnicos = new HashMap<>();
 			for(Documento doc: listaDocumentos){
 				for(PalabraClave token : doc.getListaToken()){
-					mapTokenUnicos.put(token.getRaiz(), 0);
+					if(mapTokenUnicos.containsKey(token.getRaiz())){
+						mapTokenUnicos.put(token.getRaiz(), mapTokenUnicos.get(token.getRaiz()) + 1);
+					} else{
+						mapTokenUnicos.put(token.getRaiz(), 0);
+					}
 				}
 			}
 			
-			for(String token : mapTokenUnicos.keySet()){
-				int cantDoc = 0;
-				for(Documento doc: listaDocumentos){
-					for(PalabraClave tokenDoc : doc.getListaToken()){
-						if(tokenDoc.getRaiz().equals(token)){
-							cantDoc++;
-							break;
-						}
-					}
-				}
-				mapTokenUnicos.put(token, cantDoc);
-			}
+			
+//			Map<String, Integer> mapTokenUnicos = new HashMap<>();
+//			for(Documento doc: listaDocumentos){
+//				for(PalabraClave token : doc.getListaToken()){
+//					mapTokenUnicos.put(token.getRaiz(), 0);
+//				}
+//			}
+//			System.out.println("tamaño lista unica: " + mapTokenUnicos.size());			
+//			for(String token : mapTokenUnicos.keySet()){
+//				int cantDoc = 0;
+//				for(Documento doc: listaDocumentos){
+//					for(PalabraClave tokenDoc : doc.getListaToken()){
+//						if(tokenDoc.getRaiz().equals(token)){
+//							cantDoc++;
+//							break;
+//						}
+//					}
+//				}
+//				mapTokenUnicos.put(token, cantDoc);
+//			}
 			System.out.println("Cantidad de documentos: " + (System.currentTimeMillis() - ini));
 			ini = System.currentTimeMillis();
 			for(Documento doc: listaDocumentos){
@@ -203,7 +217,6 @@ public class BuscadorServiceImpl implements BuscadorService{
 			Documento doc2 = new Documento();
 			doc2.setIdDocumento(listaDocumentos.get(i).getIdDocumento());
 			doc2.setIdClase(listaDocumentos.get(i).getIdClase());
-			doc2.setPath(listaDocumentos.get(i).getPath());
 			doc2.setTitulo(listaDocumentos.get(i).getTitulo());
 			doc2.setNombre(listaDocumentos.get(i).getNombre());
 			doc2.setGradoSimilitud(listaDocumentos.get(i).getGradoSimilitud());
@@ -298,5 +311,56 @@ public class BuscadorServiceImpl implements BuscadorService{
 //		System.out.println("doc: "+documento.getNombre()+ ", grado: "+ new BigDecimal(gradoSimilitud));
 		
 		return gradoSimilitud;
+	}
+
+	@Override
+	public ReporteBean generarReporte(List<Clase> listaClases, String fechaIni, String fechaFin) {
+		
+		ReporteBean reporte = new ReporteBean();
+		
+		List<String> listaFechas = new ArrayList<>();
+		int mesIni = Utils.parseInt(fechaIni.split("-")[1]);
+		int anioIni = Utils.parseInt(fechaIni.split("-")[0]);
+		int mesFin = Utils.parseInt(fechaFin.split("-")[1]);
+		int anioFin = Utils.parseInt(fechaFin.split("-")[0]);
+		
+		List<DetalleReporteBean> listaDetalle = new ArrayList<>();
+		int mesIniTemp = mesIni;
+		int anioIniTemp = anioIni;
+		
+		String strMes = mesIniTemp < 10 ? ("0" + mesIniTemp) : String.valueOf(mesIniTemp);
+		String strFecha = anioIniTemp + "-" + strMes;
+		listaFechas.add(strFecha);
+		while(!(mesIniTemp == mesFin && anioIniTemp == anioFin)){
+			if(mesIniTemp < 12){
+				mesIniTemp++;
+			} else{
+				mesIniTemp = 1;
+				anioIniTemp++;
+			}	
+			strMes = mesIniTemp < 10 ? ("0" + mesIniTemp) : String.valueOf(mesIniTemp);
+			strFecha = anioIniTemp + "-" + strMes;
+			listaFechas.add(strFecha);
+		} 
+		
+		for(Clase claseSelect: listaClases){
+			DetalleReporteBean detalle = new DetalleReporteBean();
+			
+			Map<String, Integer> mapCantDoc = documentoService.obtenerCantidadDocumentos
+					(claseSelect.getIdClase(), anioIni, anioFin, mesIni, mesFin);
+			
+			for(String fecha: listaFechas){
+				if(!mapCantDoc.containsKey(fecha)){
+					mapCantDoc.put(fecha, 0);
+				}
+			}
+			detalle.setNombreClase(claseSelect.getNombre());
+			detalle.setMapCantResoluciones(mapCantDoc);
+			listaDetalle.add(detalle);
+		}
+		
+		reporte.setListaCabeceraFechas(listaFechas);
+		reporte.setListaDetalleCantidad(listaDetalle);
+		return reporte;
 	}
 }

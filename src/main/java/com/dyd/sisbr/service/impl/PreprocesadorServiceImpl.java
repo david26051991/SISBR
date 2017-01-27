@@ -40,9 +40,18 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 	@Override
 	public List<PalabraClave> preprocesamiento(File file){
 		
-//		System.out.println("COMIENZA PREPRECESAMIENTO: "+file.getName());
+		System.out.println("COMIENZA PREPRECESAMIENTO: "+file.getName());
 		//leer los documentos
-		String textFromPage = Utils.obtenerTextoPDF(file.getPath());
+		String textFromPage = "";
+		String url_path = file.getPath();
+		
+		if(Utils.getExtensionFile(url_path).toLowerCase().equals(Constantes.FILE_PDF)){
+			textFromPage = Utils.obtenerTextoPDF(url_path);
+		} else if(Utils.getExtensionFile(file.getPath()).toLowerCase().equals(Constantes.FILE_DOCX)){
+			textFromPage = Utils.obtenerTextoWordDOCX(url_path);
+		} else if(Utils.getExtensionFile(file.getPath()).toLowerCase().equals(Constantes.FILE_DOC)){
+			textFromPage = Utils.obtenerTextoWordDOC(url_path);
+		}
 		//Identificar secciones del documento
 		if(textFromPage == null || textFromPage.isEmpty())
 			return null;
@@ -84,11 +93,6 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 			t.setRaiz(it.next());
 			lista.add(t);
 		}
-		
-//		for(PalabraClave token : lista){
-//			System.out.println(token.getRaiz() + " " + token.getSeccion()+",");
-//		}
-		
 		return lista;
 	}
 	

@@ -52,6 +52,29 @@
 	</div>
 </div>
 
+<div class="modal fade" id="idModalMensaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      	<button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">
+            <span id="idTituloDialog"></span>
+        </h4>
+      </div>
+      <div class="modal-body">
+         <table id="idModelTbl">
+              <tr><td style="width: 60px;"></td>
+               <td></td>
+               </tr>
+         </table>
+      </div>
+      <div class="modal-footer">
+           <div id="idButtonFooter"></div>
+        </div>
+    </div>
+  </div>
+</div>
+
 <script src="/sisbr/js/script.js"></script>
 <script type="text/javascript">
 
@@ -125,11 +148,14 @@
 					anioIni: numAnioIni,
 					anioFin: numAnioFin
 				}
-			}).done(function(lista){
-				pintarListaDocumentos(lista);
+			}).done(function(respuesta){
 				endAjax();
 				$("#btnBuscar").prop("disabled", false);
-		            
+				if(respuesta.exito){
+					pintarListaDocumentos(respuesta.lista);
+				} else{
+					dialogError(respuesta.mensaje);
+				}
 			}).error(function(jqxhr, textStatus, errorThrown){
 			      alert(textStatus + "\n" + errorThrown);
 		    });
@@ -165,7 +191,7 @@
 				     + '<div class="panel-heading"><label>' + documento.titulo + "<font color='#2d7da4'> &mdash; " + getDescClase(documento.idClase) + '</font></label></div>'
 				     + '<div class="panel-body">' 
 				     + '<div class="col-sm-11">' + documento.resumen + '... </div>'
-				     + '<div class="col-sm-1">' + '<a href="javascript:abrirArchivo(\'' + documento.nombre + '\')"> Ver Más </a>' + '</div>'
+				     + '<div class="col-sm-1">' + '<a href="javascript:abrirArchivo(\'' + documento.idArchivo + '\')"> Ver Más </a>' + '</div>'
 				     + '</div></div>';
 			}
 		}else{
@@ -181,7 +207,7 @@
 		return texto;
 	}
 	
-	function abrirArchivo(path){
-		window.open("buscador/verPDF/"+path);
+	function abrirArchivo(idArchivo){
+		window.open("buscador/verPDF/"+idArchivo);
 	}
 </script>

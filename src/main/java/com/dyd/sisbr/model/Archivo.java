@@ -6,6 +6,7 @@ public class Archivo {
 	private byte[] datos;
 	private String nombre;
 	private String texto;
+	private String path;
 	
 	public int getIdArchivo() {
 		return idArchivo;
@@ -30,6 +31,12 @@ public class Archivo {
 	}
 	public void setTexto(String texto) {
 		this.texto = texto;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 }

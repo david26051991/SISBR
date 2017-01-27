@@ -10,13 +10,21 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+
 import com.dyd.sisbr.model.Documento;
 import com.dyd.sisbr.model.PalabraClave;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
@@ -29,13 +37,18 @@ public class Utils {
 	private static long tiempoInicioLog;
 	private static ObjectMapper mapper = new ObjectMapper();
 	
+	public enum Mes {
+    	ENERO, FEBRERO, MARZO, ABRIL, MAYO, JUNIO, JULIO, AGOSTO, SETIEMBRE, SEPTIEMBRE, OCTUBRE, NOVIEMBRE, DICIEMBRE
+    }
+	
 	public static File guardarArchivoPDF(String ruta, File origen){
-		
 		try{
-			String path_destino = ruta+origen.getName();
+			String fechaActual = convertDateToString(new Date(), "YYYYMM");
+			File carpeta_destino = new File(ruta + File.separator + fechaActual);
+			carpeta_destino.mkdir();
+			String path_destino = carpeta_destino.getAbsolutePath() + File.separator + origen.getName();
 			PdfReader pdfReader = new PdfReader(origen.getPath());
-			PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileOutputStream(
-					path_destino));			
+			PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileOutputStream(path_destino));			
 			pdfStamper.close();
 			return new File(path_destino);
 		}
@@ -45,16 +58,17 @@ public class Utils {
 		}
 	}
 	
-	public static File guardarBytesArchivoPDF(String ruta, String nameFile, byte[] bytesFile){
-		
-		try{
-			 File file = new File(ruta + File.separator + nameFile);
-			 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
-		     stream.write(bytesFile);	
-		     stream.close();
-		     return file;
-		}
-		catch(Exception e){
+	public static File guardarBytesArchivoPDF(String ruta, String nameFile, byte[] bytesFile) {
+		try {
+			String fechaActual = convertDateToString(new Date(), "YYYYMM");
+			File carpeta_destino = new File(ruta + File.separator + fechaActual);
+			carpeta_destino.mkdir();
+			String path_destino = carpeta_destino.getAbsolutePath() + File.separator + nameFile;
+			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(path_destino));
+			stream.write(bytesFile);
+			stream.close();
+			return new File(path_destino);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -73,10 +87,47 @@ public class Utils {
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
-			//textFromPage = null;
 			System.out.println("Error en lectura de: "+url_PDF);
 		}
 		return textFromPage;
+	}
+	
+	@SuppressWarnings("resource")
+	public static String obtenerTextoWordDOC(String url){
+        String textFromPage = "";
+        try{
+        	File file = new File(url);
+            FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+            HWPFDocument document = new HWPFDocument(fis);
+			WordExtractor extractor = new WordExtractor(document);
+            String[] fileData = extractor.getParagraphText();
+            for (int i = 0; i < fileData.length; i++){
+                if (fileData[i] != null)
+                	textFromPage += fileData[i];
+            }
+            fis.close();
+        } catch (Exception exep){
+            exep.printStackTrace();
+        }
+        return textFromPage;
+	}
+	
+	@SuppressWarnings("resource")
+	public static String obtenerTextoWordDOCX(String url){
+        String textFromPage = "";
+        try{
+        	File file = new File(url);
+            FileInputStream fis = new FileInputStream(file.getAbsolutePath());
+			XWPFDocument document = new XWPFDocument(fis);
+            List<XWPFParagraph> paragraphs = document.getParagraphs();
+            for (XWPFParagraph para : paragraphs) {
+            	textFromPage += para.getText();
+            }
+            fis.close();
+        } catch (Exception exep){
+            exep.printStackTrace();
+        }
+        return textFromPage;
 	}
 	
 	
@@ -210,6 +261,17 @@ public class Utils {
     	return json;
     }
     
+    public static <T> List<T> jsonToList(String jsonString, Class<?> clazz) {
+        List<T> result = null;
+        try {
+           JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, clazz);
+           result = mapper.readValue(jsonString, type);
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return result;
+     }
+    
     /**
 	 * contar la frecuencia de una palabra en el mismo documento
 	 * @param documento
@@ -308,6 +370,68 @@ public class Utils {
     
     public static void logFinTiempoDuracion(String mensaje){
     	System.out.println(mensaje + ": " + (System.currentTimeMillis() - tiempoInicioLog) + " milisegundos");
+    }
+    
+    public static Date parsearFecha(String fechaString, String formato) {
+        Date resultDate = null;
+        try {
+           SimpleDateFormat formatoFecha = new SimpleDateFormat(formato);
+           if (fechaString != null && !fechaString.isEmpty()) {
+              resultDate = formatoFecha.parse(fechaString);
+           }
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return resultDate;
+    }
+    
+    public static String convertDateToString(Date hora, String format) {
+        try {
+           SimpleDateFormat dt = new SimpleDateFormat(format);
+           return dt.format(hora);
+
+        } catch (Exception e) {
+           return null;
+        }
+     }
+    
+    public static Integer parseInt(Object objeto) {
+        try {
+           return Integer.parseInt(objeto.toString());
+        } catch (NumberFormatException e) {
+           e.printStackTrace();
+           return null;
+        }
+     }
+    
+    public static int getNumeroMes(String strMes){
+    	int numMes = 0;
+    	switch(Mes.valueOf(strMes)){
+    		case ENERO		: numMes = 1;break;
+    		case FEBRERO	: numMes = 2;break;
+    		case MARZO		: numMes = 3;break;
+    		case ABRIL		: numMes = 4;break;
+    		case MAYO		: numMes = 5;break;
+    		case JUNIO		: numMes = 6;break;
+    		case JULIO		: numMes = 7;break;
+    		case AGOSTO		: numMes = 8;break;
+    		case SETIEMBRE	: numMes = 9;break;
+    		case SEPTIEMBRE	: numMes = 9;break;
+    		case OCTUBRE	: numMes = 10;break;
+    		case NOVIEMBRE	: numMes = 11;break;
+    		case DICIEMBRE	: numMes = 12;break;
+    	};
+    	return numMes;
+    }
+    
+    public static String getExtensionFile(String path){
+    	String ext = "";
+    	try{
+    		ext = path.split("\\.")[path.split("\\.").length -1];
+    	} catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	return ext;
     }
     
 }
