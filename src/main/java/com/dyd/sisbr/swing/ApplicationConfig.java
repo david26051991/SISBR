@@ -4,15 +4,12 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-@EnableAutoConfiguration
-@ComponentScan(basePackages = "com.dyd.sisbr.*")
-@MapperScan(value={"com.dyd.sisbr.dao"})
+//@EnableAutoConfiguration
+//@ComponentScan(basePackages = "com.dyd.sisbr.*")
+//@MapperScan(value={"com.dyd.sisbr.dao"})
 public class ApplicationConfig {
 
 	@Bean

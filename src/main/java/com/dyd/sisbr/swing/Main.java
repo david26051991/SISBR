@@ -8,11 +8,10 @@ import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.springframework.stereotype.Component;
 
 import com.dyd.sisbr.service.ClasificadorBatchService;
 
-@Component
+//@Component
 public class Main extends Thread {
 
 	@Autowired

@@ -91,48 +91,74 @@
 		$("#btnClasificar").click(function(){
 			startAjax();
 			$("#btnClasificar").prop("disabled", true);
-			var bar = $('.progress-bar');
-			var cantFiles = $('#resoluciones').prop('files').length;
-			var aumento = 100/cantFiles;
-			var porcentaje = 0;
+
+			var form = new FormData();
+			var files = $('#resoluciones').prop('files');
+			for (var i = 0; i < files.length ; i++) {
+				form.append(files[i].name, files[i]);
+            }
+			form.append('${_csrf.parameterName}', '${_csrf.token}');
+			$.ajax({
+				    url: 'clasificador/clasificarDocumentos?${_csrf.parameterName}=${_csrf.token}',
+					data: form,
+				    dataType: 'text',
+				    method: 'POST',
+				    processData: false,
+				    contentType: false,
+				    success: function(respuesta){
+				    	endAjax();
+				    	$("#btnClasificar").prop("disabled", false);
+				    	respuesta = $.parseJSON(respuesta);
+				    	if(respuesta.exito){
+				    		pintarResultados(respuesta.lista);
+				    	} else{
+				    		dialogError(respuesta.mensaje);
+				    	}
+				    }
+			  });
 			
-			$("#barraProgreso").show();
+// 			var bar = $('.progress-bar');
+// 			var cantFiles = $('#resoluciones').prop('files').length;
+// 			var aumento = 100/cantFiles;
+// 			var porcentaje = 0;
 			
-			var listaDocumentos = [];
+// 			$("#barraProgreso").show();
 			
-			for(var i = 0; i < cantFiles; i++){
-				var form = new FormData();
-				form.append('file', $('#resoluciones').prop('files')[i]);
-				form.append('${_csrf.parameterName}', '${_csrf.token}');
-				 $.ajax({
-					    url: 'clasificador/clasificarDocumentos?${_csrf.parameterName}=${_csrf.token}',
-						data: form,
-					    dataType: 'text',
-					    method: 'POST',
-					    processData: false,
-					    contentType: false,
-					    async: true,
-					    success: function(respuesta){
-					    	respuesta = $.parseJSON(respuesta);
-					    	porcentaje += aumento;
-					    	bar.width( porcentaje + '%');
-					    	if(respuesta.exito){
-					    		listaDocumentos.push(respuesta.data);
-					    	} else{
-					    		var doc = {"nombre": respuesta.data.nombre};
-					    		var clase = {"nombre": respuesta.mensaje};
-					    		doc["clase"] = clase;
-					    		listaDocumentos.push(doc);
-					    	}
-					    	if(listaDocumentos.length == (cantFiles)){
-					    		$("#barraProgreso").hide();
-					      		pintarResultados(listaDocumentos);
-					      		$("#btnClasificar").prop("disabled", false);
-					      		endAjax();
-					    	}
-					    }
-					  });
-			}
+// 			var listaDocumentos = [];
+			
+// 			for(var i = 0; i < cantFiles; i++){
+// 				var form = new FormData();
+// 				form.append('file', $('#resoluciones').prop('files')[i]);
+// 				form.append('${_csrf.parameterName}', '${_csrf.token}');
+// 				 $.ajax({
+// 					    url: 'clasificador/clasificarDocumentos?${_csrf.parameterName}=${_csrf.token}',
+// 						data: form,
+// 					    dataType: 'text',
+// 					    method: 'POST',
+// 					    processData: false,
+// 					    contentType: false,
+// 					    async: false,
+// 					    success: function(respuesta){
+// 					    	respuesta = $.parseJSON(respuesta);
+// 					    	porcentaje += aumento;
+// 					    	bar.width( porcentaje + '%');
+// 					    	if(respuesta.exito){
+// 					    		listaDocumentos.push(respuesta.data);
+// 					    	} else{
+// 					    		var doc = {"nombre": respuesta.data.nombre};
+// 					    		var clase = {"nombre": respuesta.mensaje};
+// 					    		doc["clase"] = clase;
+// 					    		listaDocumentos.push(doc);
+// 					    	}
+// 					    	if(listaDocumentos.length == (cantFiles)){
+// 					    		$("#barraProgreso").hide();
+// 					      		pintarResultados(listaDocumentos);
+// 					      		$("#btnClasificar").prop("disabled", false);
+// 					      		endAjax();
+// 					    	}
+// 					    }
+// 					  });
+// 			}
 		});
 		
 	});

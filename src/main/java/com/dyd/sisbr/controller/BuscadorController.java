@@ -55,8 +55,8 @@ public class BuscadorController extends ExceptionHandlerController {
 	@Autowired
 	private IndiceService indiceService;
 
-	@RequestMapping("/iniciarConsulta")
-	public String inicio(Model model) {
+	@RequestMapping("/iniciarConsultaAdmin")
+	public String inicioAdmin(Model model) {
 
 		List<Campo> listaCampos = campoService.obtenerCampos();
 		List<Clase> listaClases = buscadorService.obtenerClases();
@@ -65,6 +65,18 @@ public class BuscadorController extends ExceptionHandlerController {
 		model.addAttribute("listaClases", Utils.getJson(listaClases));
 
 		return "busqueda";
+	}
+	
+	@RequestMapping("/iniciarConsultaUser")
+	public String inicioUser(Model model) {
+
+		List<Campo> listaCampos = campoService.obtenerCampos();
+		List<Clase> listaClases = buscadorService.obtenerClases();
+
+		model.addAttribute("listaCampos", Utils.getJson(listaCampos));
+		model.addAttribute("listaClases", Utils.getJson(listaClases));
+
+		return "busquedaLimit";
 	}
 
 	@RequestMapping(value = "/buscar", produces = "application/json; charset=utf-8")

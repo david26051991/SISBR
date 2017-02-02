@@ -139,7 +139,7 @@
 	            		+ '</li>';
 			} else{
 				strHtml += ' <li class="menu">'
-	    	          + '<a class="opcion" href="#" data-url="' + objOpcion.link + '"><i class="fa fa-fw fa-search"></i> '+ objOpcion.nombre + '</a>'
+	    	          + '<a class="opcion" href="#" data-url="' + objOpcion.link + '"><i class="glyphicon glyphicon-triangle-right"></i> '+ objOpcion.nombre + '</a>'
 	                  + '</li>';	
 			}
 		});

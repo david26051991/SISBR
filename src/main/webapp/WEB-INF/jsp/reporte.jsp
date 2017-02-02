@@ -68,18 +68,25 @@
 	</div>
 	
 	<div class="panel panel-default hidden" id="panelResultado">
-		<ul class="nav nav-tabs">
-			<li role="presentation" class="active"> <a data-toggle="tab" href="#report1"><i class="glyphicon glyphicon-list-alt"></i> Tabla</a></li>
-			<li role="presentation"><a data-toggle="tab" href="#report2"><i class="fa fa-area-chart"></i> Gr&aacute;fico Lineas</a></li>
-			<li role="presentation"><a data-toggle="tab" href="#report3"><i class="fa fa-pie-chart"></i> Gr&aacute;fico Porcentajes</a></li>
-		</ul>
+		<div class="row">
+			 <div class="col-sm-9">
+			 	<ul class="nav nav-tabs">
+					<li role="presentation" class="active"> <a data-toggle="tab" href="#report1"><i class="glyphicon glyphicon-list-alt"></i> Tabla</a></li>
+					<li role="presentation"><a data-toggle="tab" href="#report2"><i class="fa fa-area-chart"></i> Gr&aacute;fico Lineas</a></li>
+					<li role="presentation"><a data-toggle="tab" href="#report3"><i class="fa fa-pie-chart"></i> Gr&aacute;fico Porcentajes</a></li>
+				</ul>
+			 </div>
+			 <div class="col-sm-3" align="right" style="margin-top:4px;padding-right:19px;">
+			 	<button type="button" class="btn btn-danger" id="btnImprimir">Imprimir</button>
+			 </div>
+		</div>
 		<div class="tab-content">
 			<div id="report1" class="tab-pane fade in active">
 				<div class="row">
                     <div class="col-lg-12">
                         <div class="panel panel-success">
                             <div class="panel-body">
-                                <div class="table-responsive">
+                                <div class="table-responsive" id="responsiveTabla">
 									<table id="tblResultado" class="display"  cellspacing="0" width="100%" style="font-size: 13px;">
 										<thead class="bg-primary">
 										</thead>
@@ -244,6 +251,15 @@
 			      alert(textStatus + "\n" + errorThrown);
 		    });
 		});
+		
+		$("#btnLimpiar").click(function(){
+			limpiar();	
+		});
+		
+		$("#btnImprimir").click(function(){
+			printContent();	
+		});
+		
 	});
 	
 	function pintarReporteTabla(reporte){
@@ -375,4 +391,42 @@
 	    });
 	}
 	
+	function limpiar(){
+		$("#panelResultado").addClass("hidden");
+		$("#flot-pie-chart").html("");
+		$('#morris-area-chart').html("");
+		$('#tblResultado').html("");
+		$("#btnSuprAll").trigger("click");
+	}
+	
+	
+	function printContent() {
+		var printcontent = $('#' + 'panelResultado').clone().html();
+		var contentHtml = document.documentElement.innerHTML;
+		var myWindow = window.open('', 'my div', 'height=800,width=800');
+		myWindow.document.write(contentHtml);
+		myWindow.document.body.innerHTML = printcontent;
+		myWindow.document.getElementById("responsiveTabla").className = "";
+        myWindow.document.close(); // necessary for IE >= 10
+
+        myWindow.onload=function(){ // necessary if the div contain images
+            myWindow.focus(); // necessary for IE >= 10
+            myWindow.print();
+            myWindow.close();
+        };
+// 		var resportTemp = respuestaReport;
+// 		var fechaIni = $("#txtAnioIni").val();
+// 		var fechaFin = $("#txtAnioFin").val();
+// 		var restorepage = $('body').html();
+// 		var printcontent = $('#' + 'report1').clone();
+// 		$('body').empty().html(printcontent);
+// 		window.print();
+// 		$('body').html(restorepage);
+// 		$("#txtAnioIni").val(fechaIni);
+// 		$("#txtAnioFin").val(fechaFin);
+// 		respuestaReport = resportTemp;
+// 		pintarReporteTabla(respuestaReport);
+// 		pintarReporteGraficoArea(respuestaReport);
+// 		pintarReporteGraficoPie(respuestaReport);
+	}
 </script>

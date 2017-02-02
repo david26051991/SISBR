@@ -4,14 +4,16 @@ import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-//@Configuration
-////@ComponentScan(basePackages = "com.dyd.sisbr.*")
-//@MapperScan(value={"com.dyd.sisbr.dao"})
+@Configuration
+//@ComponentScan(basePackages = "com.dyd.sisbr.*")
+@MapperScan(value={"com.dyd.sisbr.dao"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 	
 	@Override
