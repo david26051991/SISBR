@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin - Bootstrap Admin Template</title>
+    <title>Sistema de Búsqueda de Resoluciones Rectorales</title>
 
 	<!-- CSS -->
     <link href="/sisbr/webjars/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">

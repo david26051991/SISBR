@@ -10,10 +10,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Order(SecurityProperties.BASIC_AUTH_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
@@ -21,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-	  auth.jdbcAuthentication().dataSource(dataSource)
+	  auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(NoOpPasswordEncoder.getInstance())
 		.usersByUsernameQuery(
 			"select username, password, enabled from usuario where username=?")
 		.authoritiesByUsernameQuery(

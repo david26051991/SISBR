@@ -24,6 +24,8 @@ public class Documento implements Serializable{
 	private Clase clase;
 	
 	private List<PalabraClave> listaToken;
+	
+	private List<PalabraClave> listaTokenBuscador;
 
 	public Documento(){}
 	
@@ -149,6 +151,14 @@ public class Documento implements Serializable{
 
 	public void setMes(int mes) {
 		this.mes = mes;
+	}
+
+	public List<PalabraClave> getListaTokenBuscador() {
+		return listaTokenBuscador;
+	}
+
+	public void setListaTokenBuscador(List<PalabraClave> listaTokenBuscador) {
+		this.listaTokenBuscador = listaTokenBuscador;
 	}
 
 }

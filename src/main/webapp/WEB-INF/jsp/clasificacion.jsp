@@ -13,7 +13,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-10">
-						<input type="file" id = "resoluciones" name = "file" data-buttonText="Seleccionar Archivos" accept=".pdf" multiple="multiple">
+						<input type="file" id = "resoluciones" name = "file" data-buttonText="Seleccionar Archivos" accept=".pdf,.doc,.docx" multiple="multiple">
 					</div>
 				</div>
 				<div class="form-group">

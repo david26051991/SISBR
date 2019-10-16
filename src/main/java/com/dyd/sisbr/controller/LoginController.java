@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String inicio(
+	public String login(
 			@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout,
 			Model model){
@@ -27,6 +27,11 @@ public class LoginController {
 			model.addAttribute("msg", "You've been logged out successfully.");
 		}		  
 		return "login";
+	}
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String inicio() {
+		return "redirect:/inicio";
 	}
 	
 	@RequestMapping(value = "/403", method = RequestMethod.GET)

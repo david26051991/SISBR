@@ -87,7 +87,7 @@
                         <div class="panel panel-success">
                             <div class="panel-body">
                                 <div class="table-responsive" id="responsiveTabla">
-									<table id="tblResultado" class="display"  cellspacing="0" width="100%" style="font-size: 13px;">
+									<table id="tblResultado" class="display"  style="font-size: 13px;width:100%">
 										<thead class="bg-primary">
 										</thead>
 									</table>

@@ -76,19 +76,8 @@ public class BuscadorServiceImpl implements BuscadorService{
 						listaPalabraxDoc.add(token);
 					}
 				}
-//				List<Indice> indicesDocumento = indiceService.identificarAtributos(Utils.obtenerTextoPDF(doc.getPath()));
 				List<Indice> indicesDocumento = indiceService.mapearIndicesPorLista(listaIndices, doc.getIdDocumento());
-//				System.out.println("cantidad de indices: "+ indicesDocumento.size() + ", idDocumento: " + doc.getIdDocumento());
 				for(Indice indice: indicesDocumento){
-//					String[] palabrasIndice = indice.getDescripcion().split(" ");
-//					for(String palabra: palabrasIndice){
-//						if(!palabra.equals("de") && !palabra.equals("del")){
-//							PalabraClave token = new PalabraClave();
-//							token.setRaiz(palabra);
-//							token.setTipo(1);
-//							listaPalabraxDoc.add(token);	
-//						}
-//					}
 					PalabraClave token = new PalabraClave();
 					token.setRaiz(indice.getDescripcion());
 					token.setTipo(1);//indica que es de tipo anotador
@@ -116,31 +105,11 @@ public class BuscadorServiceImpl implements BuscadorService{
 					if(mapTokenUnicos.containsKey(token.getRaiz())){
 						mapTokenUnicos.put(token.getRaiz(), mapTokenUnicos.get(token.getRaiz()) + 1);
 					} else{
-						mapTokenUnicos.put(token.getRaiz(), 0);
+						mapTokenUnicos.put(token.getRaiz(), 1);
 					}
 				}
 			}
-			
-			
-//			Map<String, Integer> mapTokenUnicos = new HashMap<>();
-//			for(Documento doc: listaDocumentos){
-//				for(PalabraClave token : doc.getListaToken()){
-//					mapTokenUnicos.put(token.getRaiz(), 0);
-//				}
-//			}
-//			System.out.println("tamaño lista unica: " + mapTokenUnicos.size());			
-//			for(String token : mapTokenUnicos.keySet()){
-//				int cantDoc = 0;
-//				for(Documento doc: listaDocumentos){
-//					for(PalabraClave tokenDoc : doc.getListaToken()){
-//						if(tokenDoc.getRaiz().equals(token)){
-//							cantDoc++;
-//							break;
-//						}
-//					}
-//				}
-//				mapTokenUnicos.put(token, cantDoc);
-//			}
+
 			System.out.println("Cantidad de documentos: " + (System.currentTimeMillis() - ini));
 			ini = System.currentTimeMillis();
 			for(Documento doc: listaDocumentos){
@@ -162,14 +131,6 @@ public class BuscadorServiceImpl implements BuscadorService{
 			ini = System.currentTimeMillis();
 			List<Indice> indicesConsulta = indiceService.identificarAtributos(consulta);
 			for(Indice indice: indicesConsulta){
-//				String[] palabrasIndice = indice.getDescripcion().split(" ");
-//				for(String palabra: palabrasIndice){
-//					if(!palabra.equals("de") && !palabra.equals("del")){
-//						PalabraClave token = new PalabraClave();
-//						token.setRaiz(palabra);
-//						listaConsulta.add(token);	
-//					}
-//				}
 				PalabraClave token = new PalabraClave();
 				token.setRaiz(indice.getDescripcion());
 				listaConsulta.add(token);

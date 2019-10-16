@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,8 +56,8 @@ public class BuscadorController extends ExceptionHandlerController {
 	@Autowired
 	private IndiceService indiceService;
 
-	@RequestMapping("/iniciarConsultaAdmin")
-	public String inicioAdmin(Model model) {
+	@GetMapping("/iniciarAdmi")
+	public String inicioAdmi(Model model) {
 
 		List<Campo> listaCampos = campoService.obtenerCampos();
 		List<Clase> listaClases = buscadorService.obtenerClases();
@@ -67,7 +68,7 @@ public class BuscadorController extends ExceptionHandlerController {
 		return "busqueda";
 	}
 	
-	@RequestMapping("/iniciarConsultaUser")
+	@RequestMapping("/iniciarUser")
 	public String inicioUser(Model model) {
 
 		List<Campo> listaCampos = campoService.obtenerCampos();

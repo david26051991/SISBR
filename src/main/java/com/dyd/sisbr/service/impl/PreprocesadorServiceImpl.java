@@ -2,6 +2,7 @@ package com.dyd.sisbr.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -67,10 +68,10 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 		
 		//identificacion de palabras por secciones
 		List<PalabraClave> lista = new ArrayList<PalabraClave>();
-		agregarTokenSeccion(lista, tokens, "visto", 1);			//seccion Titulo
-		agregarTokenSeccion(lista, tokens, "considerando", 2);	//seccion Visto
-		agregarTokenSeccion(lista, tokens, "resuelve", 3);		//seccion Considerando
-		agregarTokenSeccion(lista, tokens, "atentamente", 4);	//seccion Se resuelve
+		agregarTokenSeccion(lista, tokens, "visto", Constantes.SECCION_TITULO);
+		agregarTokenSeccion(lista, tokens, "considerando", Constantes.SECCION_VISTO);
+		agregarTokenSeccion(lista, tokens, "resuelve", Constantes.SECCION_CONSIDERANDO);
+		agregarTokenSeccion(lista, tokens, "atentamente", Constantes.SECCION_RESUELVE);
 		
 		//stemming
 		lematizarTokens(lista);
@@ -81,18 +82,43 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 		//reduccion de dimensionalidad
 	    
 		//se quitan palabras repetidas
-		HashSet<String> listaUniqDoc = new HashSet<String>();
+//		HashSet<String> listaUniqDoc = new HashSet<String>();
+//		
+//		for(PalabraClave token : lista){
+//			listaUniqDoc.add(token.getRaiz());
+//		}
+//		lista.clear();
+//		Iterator<String> it = listaUniqDoc.iterator();
+//		while(it.hasNext()){
+//			PalabraClave t = new PalabraClave();
+//			t.setRaiz(it.next());
+//			lista.add(t);
+//		}
+		
+		HashMap<String, Integer> listaUniqDoc = new HashMap<>();
 		
 		for(PalabraClave token : lista){
-			listaUniqDoc.add(token.getRaiz());
+//			if(token.getSeccion() == Constantes.SECCION_VISTO || token.getSeccion() == Constantes.SECCION_RESUELVE){
+			if(token.getSeccion() == Constantes.SECCION_VISTO){
+				listaUniqDoc.put(token.getRaiz(), token.getSeccion());
+			} else{
+				if(listaUniqDoc.containsKey(token.getRaiz())){
+					listaUniqDoc.put(token.getRaiz(), listaUniqDoc.get(token.getRaiz()));
+				} else{
+					listaUniqDoc.put(token.getRaiz(), 0);
+				}
+			}
 		}
 		lista.clear();
-		Iterator<String> it = listaUniqDoc.iterator();
+		Iterator<String> it = listaUniqDoc.keySet().iterator();
 		while(it.hasNext()){
+			String raiz = it.next();
 			PalabraClave t = new PalabraClave();
-			t.setRaiz(it.next());
+			t.setRaiz(raiz);
+			t.setSeccion(listaUniqDoc.get(raiz));
 			lista.add(t);
 		}
+		
 		return lista;
 	}
 	
@@ -130,6 +156,11 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 		}
 		for(PalabraClave token: lista){
 			listaUnica.add(token.getRaiz());
+			/* Prueba */
+			if(token.getSeccion() == Constantes.SECCION_VISTO || token.getSeccion() == Constantes.SECCION_RESUELVE){
+				listaUnica.add(token.getRaiz());
+			}
+			/* Fin Prueba */
 		}
 	}
 	
@@ -154,7 +185,6 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 	@Override
 	public String borrarStopWords(String texto) {
 		List<Stopword> listaStopWords = stopwordDAO.selectStopword(Constantes.TIPO_STOPWORD_SIMPLE);
-//		String[] listaStopWords = Utils.extraerPalabrasJSON(new File(getClass().getClassLoader().getResource("stopword.json").getFile()));
 		for(Stopword palabra: listaStopWords){
 			texto = texto.replaceAll(" " + palabra.getNombre() + " ", " ");				
 		}		
@@ -164,7 +194,6 @@ public class PreprocesadorServiceImpl implements PreprocesadorService{
 	@Override
 	public String borrarStopWords_compuestos(String texto) {
 		List<Stopword> listaStopWords = stopwordDAO.selectStopword(Constantes.TIPO_STOPWORD_COMPLEJO);
-//		String[] listaStopWordsComp = Utils.extraerPalabrasJSON(new File(getClass().getClassLoader().getResource("stopword2.json").getFile()));
 		for(Stopword palabra: listaStopWords){
 			texto = texto.replaceAll(" " + palabra.getNombre() + " ", " ");	
 		}		

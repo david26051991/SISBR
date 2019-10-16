@@ -13,4 +13,5 @@ public interface ClasificadorService {
 	
 	public void construirClasificador(List<Clase> listaClases, List<Documento> listaDocumentos,  List<PalabraClave> listaUnicasPalabras);
 	
+	public List<PalabraClave> getListaTokenValidosClasifidor(List<PalabraClave> listaPalabras);
 }

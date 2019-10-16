@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,7 @@ public class ReporteController extends ExceptionHandlerController{
 	@Autowired
 	private BuscadorService buscadorService;
 	
-	@RequestMapping("/iniciarReporte")
+	@GetMapping("/iniciarReporte")
 	public String iniciarReporte(Model model){
 		List<Clase> listaClases = buscadorService.obtenerClases();
 		model.addAttribute("listaClases", Utils.getJson(listaClases));

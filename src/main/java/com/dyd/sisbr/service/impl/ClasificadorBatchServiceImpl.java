@@ -72,6 +72,7 @@ public class ClasificadorBatchServiceImpl implements ClasificadorBatchService{
 				// preprocesar documento
 				pintarLog("COMIENZA PREPROCESAMIENTO: " + file.getName());
 				List<PalabraClave> listaToken = preprocesadorService.preprocesamiento(file);
+				List<PalabraClave> listaTokenClasificador = clasificadorService.getListaTokenValidosClasifidor(listaToken);
 				if (listaToken != null) {
 					// guardar documento
 					File file_repo = Utils.guardarArchivoPDF(ruta_repositorio, file);
@@ -88,7 +89,8 @@ public class ClasificadorBatchServiceImpl implements ClasificadorBatchService{
 					doc.setClase(clase);
 					doc.setNombre(file.getName());
 					doc.setIdArchivo(archivo.getIdArchivo());
-					doc.setListaToken(listaToken);
+					doc.setListaToken(listaTokenClasificador);
+					doc.setListaTokenBuscador(listaToken);
 					listaDocumentos.add(doc);
 				}
 			}
@@ -119,13 +121,13 @@ public class ClasificadorBatchServiceImpl implements ClasificadorBatchService{
 		double progressxDoc = 65.0 / listaDocumentos.size();
 
 		for (Documento documento : listaDocumentos) {
-			for (PalabraClave palabra : documento.getListaToken()) {
+			for (PalabraClave palabra : documento.getListaTokenBuscador()) {
 				palabra.setIdDocumento(documento.getIdDocumento());
 			}
 			pintarLog("Guardar Palabras Clave, documento: "
 					+ documento.getNombre() + ", cantidad: "
-					+ documento.getListaToken().size());
-			palabraClaveService.guardarPalabrasClave(documento.getListaToken());
+					+ documento.getListaTokenBuscador().size());
+			palabraClaveService.guardarPalabrasClave(documento.getListaTokenBuscador());
 			List<Indice> listaIndice = indiceService.identificarAtributos(documento);
 
 			if (!listaIndice.isEmpty()) {

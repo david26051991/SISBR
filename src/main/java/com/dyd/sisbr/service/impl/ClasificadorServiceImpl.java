@@ -24,6 +24,7 @@ import com.dyd.sisbr.service.IndiceService;
 import com.dyd.sisbr.service.PalabraClaveService;
 import com.dyd.sisbr.service.PreprocesadorService;
 import com.dyd.sisbr.service.ServiceException;
+import com.dyd.sisbr.util.Constantes;
 import com.dyd.sisbr.util.Utils;
 
 import weka.classifiers.Evaluation;
@@ -64,8 +65,9 @@ public class ClasificadorServiceImpl implements ClasificadorService{
 		Instances instancias = (Instances) Utils.deserialize(modelo.getEstructura());
 		
 		List<PalabraClave> listaTokenNuevoDoc = preprocesadorService.preprocesamiento(file);
+		List<PalabraClave> listaTokenUsadosClas = getListaTokenValidosClasifidor(listaTokenNuevoDoc);
 		
-		Instance nueva_instancia = crearInstancia(listaTokenNuevoDoc, instancias, null);
+		Instance nueva_instancia = crearInstancia(listaTokenUsadosClas, instancias, null);
 		nueva_instancia.setDataset(instancias);
 		
 		NaiveBayes cModel = (NaiveBayes) Utils.deserialize(modelo.getDatosModelo());
@@ -89,6 +91,7 @@ public class ClasificadorServiceImpl implements ClasificadorService{
         nuevoDoc.setIdClase(clase_elegida.getIdClase());
         nuevoDoc.setClase(clase_elegida);
         nuevoDoc.setListaToken(listaTokenNuevoDoc);
+        nuevoDoc.setListaTokenBuscador(listaTokenNuevoDoc);
         
         Documento docByNombre = documentoService.obtenerDocumentoPorNombre(file.getName());
         
@@ -102,15 +105,15 @@ public class ClasificadorServiceImpl implements ClasificadorService{
     		
     		nuevoDoc.setIdArchivo(archivo.getIdArchivo());
         	documentoService.guardarDocumento(nuevoDoc);
-			for(PalabraClave palabra: nuevoDoc.getListaToken()){
+			for(PalabraClave palabra: nuevoDoc.getListaTokenBuscador()){
 				palabra.setIdDocumento(nuevoDoc.getIdDocumento());
 			}
-			System.out.println("Guardar Palabras Clave, documento: "+nuevoDoc.getNombre()+ ", cantidad: "+nuevoDoc.getListaToken().size());
+			System.out.println("Guardar Palabras Clave, documento: "+nuevoDoc.getNombre()+ ", cantidad: "+nuevoDoc.getListaTokenBuscador().size());
 			
 			calcularPeso(nuevoDoc);
 			actualizarLista(nuevoDoc);
 			
-			palabraClaveService.guardarPalabrasClave(nuevoDoc.getListaToken());
+			palabraClaveService.guardarPalabrasClave(nuevoDoc.getListaTokenBuscador());
 			List<Indice> listaIndice = indiceService.identificarAtributos(nuevoDoc);
 				
 			if(!listaIndice.isEmpty()){
@@ -269,6 +272,17 @@ public class ClasificadorServiceImpl implements ClasificadorService{
 			instancia.setValue(instancias.classAttribute() , documento.getClase().getNombre());	
 		}
 		return instancia;
+	}
+	
+	public List<PalabraClave> getListaTokenValidosClasifidor(List<PalabraClave> listaPalabras){
+		List<PalabraClave> listaPalabrasVal = new ArrayList<>();
+		for(PalabraClave token: listaPalabras){
+//			if(token.getSeccion() == Constantes.SECCION_VISTO || token.getSeccion() == Constantes.SECCION_RESUELVE){
+			if(token.getSeccion() == Constantes.SECCION_VISTO){
+				listaPalabrasVal.add(token);
+			}	
+		}
+		return listaPalabrasVal;
 	}
 
 }

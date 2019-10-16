@@ -31,7 +31,7 @@ public class ClasificadorController extends ExceptionHandlerController {
 	@Value("${path.repository.files}")
 	private String pathRepositoryFiles;
 
-	@RequestMapping("/iniciarClasificacion")
+	@RequestMapping("/iniciarClas")
 	public String inicio(Model model) {
 
 		model.addAttribute("listaDocClasificados", Utils.getJson(new ArrayList<Documento>()));

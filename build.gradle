@@ -1,27 +1,16 @@
-buildscript {
-	ext {
-		springBootVersion = '1.4.0.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+plugins {
+	id 'org.springframework.boot' version '2.1.9.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+	id 'war'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'spring-boot'
-apply plugin: 'war'
-
-// JDK 7
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    flatDir name: 'localRepository', dirs: 'D:/JARS'
+    flatDir name: 'localRepository', dirs: 'E:/JARS'
 }
 
 configurations {
@@ -30,11 +19,14 @@ configurations {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
     compile("org.springframework.boot:spring-boot-starter-security")
-	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+	//providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	compile('org.apache.tomcat.embed:tomcat-embed-jasper')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
     compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:1.1.1")
     
 	driver group: 'sql', name: 'sqljdbc4', version: ''
@@ -53,20 +45,22 @@ dependencies {
 	//compile 'javax.servlet:jstl:1.2'	
 	//compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
 	
-	//compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.2.3'
-	//compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.2.3'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.0'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.0'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
 		
 	//compile group: 'org.mybatis', name: 'mybatis', version: '3.2.8'
 	//compile group: 'org.mybatis', name: 'mybatis-spring', version: '1.2.2'
 	
-	compile group: 'weka', name: 'weka', version: '3.6.0'
+	//compile group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version: '3.8.0'
+	compile group: 'weka', name: 'weka', version: '3.6.2'
 	compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.10'
 	compile group: 'org.apache.poi', name: 'poi-scratchpad', version: '3.15'
 	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15'
 	
 	
 	//compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.39'
-	compile "com.microsoft:sqljdbc4:3.0"
+	compile "com.microsoft:sqljdbc4"
 	
 	compile group: 'org.webjars', name: 'bootstrap', version: '3.3.7'
 	compile group: 'org.webjars', name: 'jquery', version: '1.11.2'
@@ -83,11 +77,3 @@ dependencies {
 }
 
 //For Eclipse IDE only
-eclipse {
-  wtp {
-    component {
-      //define context path, default to project folder name
-      contextPath = 'sisbr'
-    }
-  }
-}
